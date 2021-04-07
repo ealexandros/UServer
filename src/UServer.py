@@ -80,14 +80,15 @@ class UServer:
                 # traceback.print_exc()
                 client.close()
 
-app = UServer(3000, host="0.0.0.0")
 
-@app.route
-def cool(req, res):
-    res.send_json({ 'response': True })
+# app = UServer(3000)
 
-app.on('/cpp', cool)
-app.start()
+# @app.route
+# def cool(req, res):
+#     res.send_json({ 'response': True })
 
-while(True):
-    pass
+# app.on('/cpp', cool)
+# app.start()
+
+# while(True):
+#     pass

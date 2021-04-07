@@ -8,4 +8,5 @@ sta_if.connect(config.SSID, config.PASS)
 
 while not sta_if.isconnected():
     pass
+
 print(sta_if.ifconfig())
