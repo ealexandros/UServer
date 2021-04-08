@@ -49,18 +49,23 @@ class UServer:
         self.__router_paths.append([path, callback, 'GET'])
 
     def post(self, path, callback):
+        path = re.findall(r'([A-Za-z0-9_-]|[:])+', path)
         self.__router_paths.append([path, callback, 'POST'])
 
     def patch(self, path, callback):
+        path = re.findall(r'([A-Za-z0-9_-]|[:])+', path)
         self.__router_paths.append([path, callback, 'PATCH'])
 
     def put(self, path, callback):
+        path = re.findall(r'([A-Za-z0-9_-]|[:])+', path)
         self.__router_paths.append([path, callback, 'PUT'])
 
     def delete(self, path, callback):
+        path = re.findall(r'([A-Za-z0-9_-]|[:])+', path)
         self.__router_paths.append([path, callback, 'DELETE'])
 
     def options(self, path, callback):
+        path = re.findall(r'([A-Za-z0-9_-]|[:])+', path)
         self.__router_paths.append([path, callback, 'OPTIONS'])
 
     @staticmethod
