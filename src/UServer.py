@@ -1,9 +1,11 @@
-# import traceback
-import network
+# import network
+import traceback
 
 from request.Request import Request
 from response.Response import Response
 from response.BadRespond import BadRespond
+
+from helpers.RegexHelpers import uregex as re
 
 try:
     import usocket as socket
@@ -24,17 +26,22 @@ class UServer:
         self.__router_paths = []
 
     def start(self):
-        sta_if = network.WLAN(network.STA_IF)
-        if(sta_if.isconnected()):
+        # sta_if = network.WLAN(network.STA_IF)
+        # if(sta_if.isconnected()):
+        if(True):
             self.__start_listening()
             if(self.__block):
                 self.__handle_server()
             else:
-                threading.start_new_thread(self.__handle_server, ())
+                # threading.start_new_thread(self.__handle_server, ())
+                threading.Thread(target=self.__handle_server, daemon=True).start()
         else:
             raise Exception('No WIFI connection.')
 
     def on(self, path, callback):
+        if(len(path) > 1 and path[-1] == '/'):
+            path = path[:-1]
+        print(re.findall(r'[/]:[A-Za-z0-9_-]+', path))
         self.__router_paths.append([path, callback])
 
     @staticmethod
@@ -77,18 +84,20 @@ class UServer:
 
                     print(__request.path, __request.req_type)
             except:
-                # traceback.print_exc()
+                traceback.print_exc()
                 client.close()
 
+app = UServer(3000)
 
-# app = UServer(3000)
+@app.route
+def cool(req, res):
+    res.send_json({ 'response': True })
 
-# @app.route
-# def cool(req, res):
-#     res.send_json({ 'response': True })
+app.on('/cpp/:aghsg', cool)
+app.on('/cppp/', cool)
+app.on('/cpp11/', cool)
 
-# app.on('/cpp', cool)
-# app.start()
+app.start()
 
-# while(True):
-#     pass
+while(True):
+    pass

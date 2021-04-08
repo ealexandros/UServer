@@ -20,7 +20,7 @@ class Request:
 
     def __parse_request(self):
         self.__request_type = re.findall(r'[A-Z]+', self.__request[0])[0]
-        self.__http_path = re.findall(r"[/][A-Za-z/]*", self.__request[0])[0]
+        self.__http_path = re.findall(r"[/][A-Za-z-_0-9+/]*", self.__request[0])[0]
         self.__http_version = re.findall(r'(HTTP[/][0-9.]*|HTTPS[/][0-9.]*)', self.__request[0])[0]
 
         for header in self.__request[1:]:
