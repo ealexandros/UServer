@@ -2,12 +2,9 @@ from UServer import UServer
 
 app = UServer(3000, host="0.0.0.0")
 
-@app.route
+@app.get('/person/:id')
 def cool(req, res):
-    res.send_json({ 'response': True })
-
-app.on('/status', cool)
-app.on('/test', cool)
+    res.send_json({ 'response': req.url_param('id') })
 
 app.start()
 

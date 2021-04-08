@@ -39,39 +39,43 @@ class UServer:
         else:
             raise Exception('No WIFI connection.')
 
+    def handle_methods(self, path, callback, method):
+        path = re.findall(r'([A-Za-z0-9_-]|[:])+', path)
+        self.__router_paths.append([path, callback, method])
+
     def on(self, path, req_method, callback):
         if(req_method not in self.req_methods):
             raise Exception('Invalid request type. You can only use:\n' + ", ".join(self.req_methods) + '.')
         self.__router_paths.append([path, callback, req_method])
 
-    def get(self, path, callback):
-        path = re.findall(r'([A-Za-z0-9_-]|[:])+', path)
-        self.__router_paths.append([path, callback, 'GET'])
+    def get(self, path):
+        def handler(callback):
+            self.handle_methods(path, callback, 'GET')
+        return handler
 
-    def post(self, path, callback):
-        path = re.findall(r'([A-Za-z0-9_-]|[:])+', path)
-        self.__router_paths.append([path, callback, 'POST'])
+    def post(self, path):
+        def handler(callback):
+            self.handle_methods(path, callback, 'POST')
+        return handler
 
-    def patch(self, path, callback):
-        path = re.findall(r'([A-Za-z0-9_-]|[:])+', path)
-        self.__router_paths.append([path, callback, 'PATCH'])
+    def patch(self, path):
+        def handler(callback):
+            self.handle_methods(path, callback, 'PATCH')
+        return handler
 
-    def put(self, path, callback):
-        path = re.findall(r'([A-Za-z0-9_-]|[:])+', path)
-        self.__router_paths.append([path, callback, 'PUT'])
+    def put(self, path):
+        def handler(callback):
+            self.handle_methods(path, callback, 'PUT')
+        return handler
 
-    def delete(self, path, callback):
-        path = re.findall(r'([A-Za-z0-9_-]|[:])+', path)
-        self.__router_paths.append([path, callback, 'DELETE'])
+    def delete(self, path):
+        def handler(callback):
+            self.handle_methods(path, callback, 'DELETE')
+        return handler
 
-    def options(self, path, callback):
-        path = re.findall(r'([A-Za-z0-9_-]|[:])+', path)
-        self.__router_paths.append([path, callback, 'OPTIONS'])
-
-    @staticmethod
-    def route(callback):
-        def handler(__request, __response):
-            return callback(__request, __response)
+    def options(self, path):
+        def handler(callback):
+            self.handle_methods(path, callback, 'OPTIONS')
         return handler
 
     def __start_listening(self):
@@ -119,11 +123,10 @@ class UServer:
 
 app = UServer(3000)
 
-@app.route
+@app.post('/adfsd/:id')
 def cool(req, res):
-    res.send_json({ 'response': True })
+    res.send_json({ 'response': req.url_param('id') })
 
-app.get('/cpp/:aghsg/:afsfa', cool)
 app.start()
 
 while(True):
