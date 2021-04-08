@@ -40,42 +40,46 @@ class UServer:
             raise Exception('No WIFI connection.')
 
     def handle_methods(self, path, callback, method):
+        path_validation = re.findall(r'[/]([A-Za-z0-9_-]|[:]|[/])+', path)[0]
+        if(path_validation != path):
+            raise Exception('Invalid path name.')
+
         path = re.findall(r'([A-Za-z0-9_-]|[:])+', path)
         self.__router_paths.append([path, callback, method])
 
-    def on(self, path, req_method, callback):
+    def on(self, path, req_method, callback, middlewares=[]):
         if(req_method not in self.req_methods):
             raise Exception('Invalid request type. You can only use:\n' + ", ".join(self.req_methods) + '.')
-        self.__router_paths.append([path, callback, req_method])
+        self.__router_paths.append([path, callback, middlewares + [req_method]])
 
-    def get(self, path):
+    def get(self, path, middlewares=[]):
         def handler(callback):
-            self.handle_methods(path, callback, 'GET')
+            self.handle_methods(path, middlewares + [callback], 'GET')
         return handler
 
-    def post(self, path):
+    def post(self, path, middlewares=[]):
         def handler(callback):
-            self.handle_methods(path, callback, 'POST')
+            self.handle_methods(path, middlewares + [callback], 'POST')
         return handler
 
-    def patch(self, path):
+    def patch(self, path, middlewares=[]):
         def handler(callback):
-            self.handle_methods(path, callback, 'PATCH')
+            self.handle_methods(path, middlewares + [callback], 'PATCH')
         return handler
 
-    def put(self, path):
+    def put(self, path, middlewares=[]):
         def handler(callback):
-            self.handle_methods(path, callback, 'PUT')
+            self.handle_methods(path, middlewares + [callback], 'PUT')
         return handler
 
-    def delete(self, path):
+    def delete(self, path, middlewares=[]):
         def handler(callback):
-            self.handle_methods(path, callback, 'DELETE')
+            self.handle_methods(path, middlewares + [callback], 'DELETE')
         return handler
 
-    def options(self, path):
+    def options(self, path, middlewares=[]):
         def handler(callback):
-            self.handle_methods(path, callback, 'OPTIONS')
+            self.handle_methods(path, middlewares + [callback], 'OPTIONS')
         return handler
 
     def __start_listening(self):
@@ -86,7 +90,7 @@ class UServer:
 
     def __router(self, __request, __response):
         url_params = {}
-        for path, callback, method in self.__router_paths:
+        for path, callbacks, method in self.__router_paths:
             if(method == __request.method and len(path) == len(__request.path_list)):
                 for defined_path, req_path in list(zip(path, __request.path_list)):
                     if(defined_path[0] == ':'):
@@ -95,8 +99,10 @@ class UServer:
                         break
                 else:
                     __request.url_params.update(url_params)
-                    callback(__request, __response)
-                    return
+                    for callback in callbacks:
+                        __next = callback(__request, __response)
+                        if(__next != True):
+                            return
         BadRespond(__response, __request).send()
 
     def __handle_server(self):
@@ -123,7 +129,7 @@ class UServer:
 
 app = UServer(3000)
 
-@app.post('/adfsd/:id')
+@app.get('/adfsd/:id')
 def cool(req, res):
     res.send_json({ 'response': req.url_param('id') })
 
