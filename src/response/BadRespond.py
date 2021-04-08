@@ -18,7 +18,7 @@ class BadRespond:
                     <p style="font-size: 0.9em">{} not supported on {} path.</p>
                 </body>
             </html>
-        '''.format(self.requestObject.req_type, self.requestObject.path)
+        '''.format(self.requestObject.method, self.requestObject.path)
 
     def send(self):
         accept_type = self.requestObject.header('Accept')

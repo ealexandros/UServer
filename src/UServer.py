@@ -24,6 +24,7 @@ class UServer:
         self.__block = block
 
         self.__router_paths = []
+        self.req_methods = ["GET", "POST", "PUT", "PATCH", "OPTIONS", "DELETE"]
 
     def start(self):
         # sta_if = network.WLAN(network.STA_IF)
@@ -38,11 +39,29 @@ class UServer:
         else:
             raise Exception('No WIFI connection.')
 
-    def on(self, path, callback):
-        if(len(path) > 1 and path[-1] == '/'):
-            path = path[:-1]
-        print(re.findall(r'[/]:[A-Za-z0-9_-]+', path))
-        self.__router_paths.append([path, callback])
+    def on(self, path, req_method, callback):
+        if(req_method not in self.req_methods):
+            raise Exception('Invalid request type. You can only use:\n' + ", ".join(self.req_methods) + '.')
+        self.__router_paths.append([path, callback, req_method])
+
+    def get(self, path, callback):
+        path = re.findall(r'([A-Za-z0-9_-]|[:])+', path)
+        self.__router_paths.append([path, callback, 'GET'])
+
+    def post(self, path, callback):
+        self.__router_paths.append([path, callback, 'POST'])
+
+    def patch(self, path, callback):
+        self.__router_paths.append([path, callback, 'PATCH'])
+
+    def put(self, path, callback):
+        self.__router_paths.append([path, callback, 'PUT'])
+
+    def delete(self, path, callback):
+        self.__router_paths.append([path, callback, 'DELETE'])
+
+    def options(self, path, callback):
+        self.__router_paths.append([path, callback, 'OPTIONS'])
 
     @staticmethod
     def route(callback):
@@ -57,10 +76,18 @@ class UServer:
         self.conn.listen(1)
 
     def __router(self, __request, __response):
-        for path, callback in self.__router_paths:
-            if(path == __request.path):
-                callback(__request, __response)
-                return
+        url_params = {}
+        for path, callback, method in self.__router_paths:
+            if(method == __request.method and len(path) == len(__request.path_list)):
+                for defined_path, req_path in list(zip(path, __request.path_list)):
+                    if(defined_path[0] == ':'):
+                        url_params[defined_path[1:]] = req_path
+                    elif(defined_path != req_path):
+                        break
+                else:
+                    __request.url_params.update(url_params)
+                    callback(__request, __response)
+                    return
         BadRespond(__response, __request).send()
 
     def __handle_server(self):
@@ -81,8 +108,6 @@ class UServer:
                     __request = Request(http_request_list, addr)
                     __response = Response(client)
                     self.__router(__request, __response)
-
-                    print(__request.path, __request.req_type)
             except:
                 traceback.print_exc()
                 client.close()
@@ -93,10 +118,7 @@ app = UServer(3000)
 def cool(req, res):
     res.send_json({ 'response': True })
 
-app.on('/cpp/:aghsg', cool)
-app.on('/cppp/', cool)
-app.on('/cpp11/', cool)
-
+app.get('/cpp/:aghsg/:afsfa', cool)
 app.start()
 
 while(True):
