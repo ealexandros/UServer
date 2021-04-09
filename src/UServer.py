@@ -4,6 +4,7 @@ import traceback
 from request.Request import Request
 from response.Response import Response
 from response.BadRespond import BadRespond, HttpExceptionResponse
+from response.ErrorResponse import ErrorResponse
 
 from helpers.RegexHelpers import uregex as re
 
@@ -29,7 +30,11 @@ class UServer:
         self.__router_paths = []
         self.req_methods = ["GET", "POST", "PUT", "PATCH", "OPTIONS", "DELETE"]
 
-        self.__error_respond = HttpExceptionResponse
+        self.__error_respond = ErrorResponse()
+
+    @property
+    def error(self):
+        return self.__error_respond
 
     def start(self):
         # sta_if = network.WLAN(network.STA_IF)
@@ -87,11 +92,6 @@ class UServer:
             self.handle_methods(path, middlewares + [callback], 'OPTIONS')
         return handler
 
-    def override_error(self):
-        def handler(callback):
-            self.__error_respond = callback
-        return handler
-
     def __start_listening(self):
         addr = socket.getaddrinfo(self.__host, self.__port)[0][-1]
         self.conn = socket.socket()
@@ -112,7 +112,7 @@ class UServer:
                     for callback in callbacks:
                         __next = callback(__request, __response)
                         if(type(__next) == Exception):
-                            self.__error_respond(__request, __response, str(__next))
+                            self.__error_respond.call(__request, __response, str(__next))
                             return
                         elif(__next != True):
                             return
@@ -146,6 +146,10 @@ app = UServer(3000)
 @app.post('/adfsd/:id', middlewares=[BodyJson])
 def cool(req, res):
     res.send_json({ 'response': req.url_param('id') })
+
+@app.error.override()
+def error(req, res, x):
+    res.send(x)
 
 app.start()
 
