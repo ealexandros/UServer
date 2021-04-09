@@ -3,9 +3,12 @@ import traceback
 
 from request.Request import Request
 from response.Response import Response
-from response.BadRespond import BadRespond
+from response.BadRespond import BadRespond, HttpExceptionResponse
 
 from helpers.RegexHelpers import uregex as re
+
+# Debug..
+from UMiddlewares import BodyJson
 
 try:
     import usocket as socket
@@ -25,6 +28,8 @@ class UServer:
 
         self.__router_paths = []
         self.req_methods = ["GET", "POST", "PUT", "PATCH", "OPTIONS", "DELETE"]
+
+        self.__error_respond = HttpExceptionResponse
 
     def start(self):
         # sta_if = network.WLAN(network.STA_IF)
@@ -82,6 +87,11 @@ class UServer:
             self.handle_methods(path, middlewares + [callback], 'OPTIONS')
         return handler
 
+    def override_error(self):
+        def handler(callback):
+            self.__error_respond = callback
+        return handler
+
     def __start_listening(self):
         addr = socket.getaddrinfo(self.__host, self.__port)[0][-1]
         self.conn = socket.socket()
@@ -101,7 +111,10 @@ class UServer:
                     __request.url_params.update(url_params)
                     for callback in callbacks:
                         __next = callback(__request, __response)
-                        if(__next != True):
+                        if(type(__next) == Exception):
+                            self.__error_respond(__request, __response, str(__next))
+                            return
+                        elif(__next != True):
                             return
         BadRespond(__response, __request).send()
 
@@ -117,7 +130,8 @@ class UServer:
                         http_request_raw += client.recv(1024).decode()
                     except:
                         break
-                http_request_list = http_request_raw.strip().split(('\r\n' if('\r\n' in http_request_raw) else '\n'))
+                http_request_body_split = re.one_cut_split(r"\r\n\r\n|\n\n", http_request_raw.strip())
+                http_request_list = http_request_body_split[0].split(('\r\n' if('\r\n' in http_request_body_split[0]) else '\n')) + [http_request_body_split[1]]
 
                 if(http_request_raw != ''):
                     __request = Request(http_request_list, addr)
@@ -129,7 +143,7 @@ class UServer:
 
 app = UServer(3000)
 
-@app.get('/adfsd/:id')
+@app.post('/adfsd/:id', middlewares=[BodyJson])
 def cool(req, res):
     res.send_json({ 'response': req.url_param('id') })
 

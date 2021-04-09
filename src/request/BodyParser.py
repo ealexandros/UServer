@@ -14,10 +14,10 @@ class BodyParser:
             elif(content_type == 'application/x-www-form-urlencoded' or content_type == 'params'):
                 return self.__parse_form()
         except:
-            print('ValueError: Can not read the body or params from the request.\n File: BodyParser.py')
+            print('ValueError: Can not read the body or params from the request.\nFile: BodyParser.py')
 
         return {
-            'raw': self.__raw_body
+            '__raw__': self.__raw_body
         }
 
     def __parse_form(self):

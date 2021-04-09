@@ -73,7 +73,7 @@ class Request:
         if(param in self.url_params):
             return self.url_params[param]
         return None
-        
+
     def body(self, body_name):
         if(body_name in self.__body):
             return self.__body[body_name]
