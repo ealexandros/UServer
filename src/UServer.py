@@ -3,13 +3,13 @@ import traceback
 
 from request.Request import Request
 from response.Response import Response
-from response.BadRespond import BadRespond, HttpExceptionResponse
+from response.BadRespond import BadRespond
 from response.ErrorResponse import ErrorResponse
 
 from helpers.RegexHelpers import uregex as re
 
 # Debug..
-from UMiddlewares import BodyJson
+from UMiddlewares import ParamValidation, BodyJson
 
 try:
     import usocket as socket
@@ -143,13 +143,9 @@ class UServer:
 
 app = UServer(3000)
 
-@app.post('/adfsd/:id', middlewares=[BodyJson])
+@app.post('/adfsd/:id', middlewares=[ParamValidation, BodyJson])
 def cool(req, res):
     res.send_json({ 'response': req.url_param('id') })
-
-@app.error.override()
-def error(req, res, x):
-    res.send(x)
 
 app.start()
 

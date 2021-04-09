@@ -26,8 +26,3 @@ class BadRespond:
             self.responseObject.send_html(self.bad_request_html)
         else:
             self.responseObject.send()
-
-def HttpExceptionResponse(req, res, error_messages=None):
-    res.send_json({
-        "errors": error_messages
-    })
