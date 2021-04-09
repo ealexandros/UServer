@@ -1,7 +1,8 @@
 # import network
 import traceback
 
-from request.Request import Request
+from request.RequestHandler import Request
+from request.RequestMethods import RequestMethods
 from response.Response import Response
 from response.BadRespond import BadRespond
 from response.ErrorResponse import ErrorResponse
@@ -31,12 +32,21 @@ class UServer:
         self.req_methods = ["GET", "POST", "PUT", "PATCH", "OPTIONS", "DELETE"]
 
         self.__error_respond = ErrorResponse()
+        self.__request_methods = RequestMethods(self)
+
+    @property
+    def router_paths(self):
+        return self.__router_paths
+
+    @property
+    def router(self):
+        return self.__request_methods
 
     @property
     def error(self):
         return self.__error_respond
 
-    def start(self):
+    def start(self, function=False):
         # sta_if = network.WLAN(network.STA_IF)
         # if(sta_if.isconnected()):
         if(True):
@@ -48,49 +58,6 @@ class UServer:
                 threading.Thread(target=self.__handle_server, daemon=True).start()
         else:
             raise Exception('No WIFI connection.')
-
-    def handle_methods(self, path, callback, method):
-        path_validation = re.findall(r'[/]([A-Za-z0-9_-]|[:]|[/])+', path)[0]
-        if(path_validation != path):
-            raise Exception('Invalid path name.')
-
-        path = re.findall(r'([A-Za-z0-9_-]|[:])+', path)
-        self.__router_paths.append([path, callback, method])
-
-    def on(self, path, req_method, callback, middlewares=[]):
-        if(req_method not in self.req_methods):
-            raise Exception('Invalid request type. You can only use:\n' + ", ".join(self.req_methods) + '.')
-        self.__router_paths.append([path, callback, middlewares + [req_method]])
-
-    def get(self, path, middlewares=[]):
-        def handler(callback):
-            self.handle_methods(path, middlewares + [callback], 'GET')
-        return handler
-
-    def post(self, path, middlewares=[]):
-        def handler(callback):
-            self.handle_methods(path, middlewares + [callback], 'POST')
-        return handler
-
-    def patch(self, path, middlewares=[]):
-        def handler(callback):
-            self.handle_methods(path, middlewares + [callback], 'PATCH')
-        return handler
-
-    def put(self, path, middlewares=[]):
-        def handler(callback):
-            self.handle_methods(path, middlewares + [callback], 'PUT')
-        return handler
-
-    def delete(self, path, middlewares=[]):
-        def handler(callback):
-            self.handle_methods(path, middlewares + [callback], 'DELETE')
-        return handler
-
-    def options(self, path, middlewares=[]):
-        def handler(callback):
-            self.handle_methods(path, middlewares + [callback], 'OPTIONS')
-        return handler
 
     def __start_listening(self):
         addr = socket.getaddrinfo(self.__host, self.__port)[0][-1]
@@ -141,9 +108,9 @@ class UServer:
                 traceback.print_exc()
                 client.close()
 
-app = UServer(3000)
+app = UServer(port=3000)
 
-@app.post('/adfsd/:id', middlewares=[ParamValidation, BodyJson])
+@app.router.post('/adfsd/:id', middlewares=[ParamValidation, BodyJson])
 def cool(req, res):
     res.send_json({ 'response': req.url_param('id') })
 
