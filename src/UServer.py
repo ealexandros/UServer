@@ -3,6 +3,8 @@ import traceback
 
 from request.RequestHandler import Request
 from request.RequestMethods import RequestMethods
+from request.Logger import Logger
+
 from response.Response import Response
 from response.BadRespond import BadRespond
 from response.ErrorResponse import ErrorResponse
@@ -32,6 +34,7 @@ class UServer:
 
         self.__error_respond = ErrorResponse()
         self.__request_methods = RequestMethods(self)
+        self.logger = Logger()
 
     @property
     def router_paths(self):
@@ -45,12 +48,15 @@ class UServer:
     def error(self):
         return self.__error_respond
 
-    def start(self, function=False):
+    def start(self, logger=False, function=False):
+
         def handler(callback):
             callback()
         # sta_if = network.WLAN(network.STA_IF)
         # if(sta_if.isconnected()):
         if(True):
+            self.logger.active = logger
+
             self.__start_listening()
             if(self.__block):
                 self.__handle_server()
@@ -107,6 +113,8 @@ class UServer:
 
                 if(http_request_raw != ''):
                     __request = Request(http_request_list, addr)
+                    if(self.logger.active):
+                        self.logger.action(__request)
                     __response = Response(client)
                     self.__router(__request, __response)
             except:
@@ -119,7 +127,7 @@ app = UServer(port=3000)
 def cool(req, res):
     res.send_json({ 'response': req.url_param('id') })
 
-app.start()
+app.start(logger=True)
 
 while(True):
     pass
