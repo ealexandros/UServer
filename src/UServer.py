@@ -10,7 +10,7 @@ from response.ErrorResponse import ErrorResponse
 from helpers.RegexHelpers import uregex as re
 
 # Debug..
-from UMiddlewares import ParamValidation, BodyJson
+from UMiddlewares import ParamValidation, BodyJson, RequestLog
 
 try:
     import usocket as socket
@@ -29,7 +29,6 @@ class UServer:
         self.__block = block
 
         self.__router_paths = []
-        self.req_methods = ["GET", "POST", "PUT", "PATCH", "OPTIONS", "DELETE"]
 
         self.__error_respond = ErrorResponse()
         self.__request_methods = RequestMethods(self)
@@ -47,6 +46,8 @@ class UServer:
         return self.__error_respond
 
     def start(self, function=False):
+        def handler(callback):
+            callback()
         # sta_if = network.WLAN(network.STA_IF)
         # if(sta_if.isconnected()):
         if(True):
@@ -56,6 +57,8 @@ class UServer:
             else:
                 # threading.start_new_thread(self.__handle_server, ())
                 threading.Thread(target=self.__handle_server, daemon=True).start()
+            if(function):
+                return handler
         else:
             raise Exception('No WIFI connection.')
 
@@ -98,7 +101,9 @@ class UServer:
                     except:
                         break
                 http_request_body_split = re.one_cut_split(r"\r\n\r\n|\n\n", http_request_raw.strip())
-                http_request_list = http_request_body_split[0].split(('\r\n' if('\r\n' in http_request_body_split[0]) else '\n')) + [http_request_body_split[1]]
+                find_line_feed = lambda s: '\r\n' if('\r\n' in s) else '\n'
+                http_request_list = http_request_body_split[0].split(find_line_feed(http_request_body_split[0])) \
+                                        + [find_line_feed(http_request_body_split[0]), http_request_body_split[1]]
 
                 if(http_request_raw != ''):
                     __request = Request(http_request_list, addr)
@@ -110,7 +115,7 @@ class UServer:
 
 app = UServer(port=3000)
 
-@app.router.post('/adfsd/:id', middlewares=[ParamValidation, BodyJson])
+@app.router.post('/adfsd/:id', middlewares=[RequestLog])
 def cool(req, res):
     res.send_json({ 'response': req.url_param('id') })
 
