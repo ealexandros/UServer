@@ -22,7 +22,7 @@ class BadRespond:
 
     def send(self):
         accept_type = self.requestObject.header('Accept')
-        if('text/html' in accept_type or '*/*' in accept_type):
+        if(accept_type == None):
+            self.responseObject.send('{} not supported on {} path.'.format(self.requestObject.method, self.requestObject.path))
+        elif('text/html' in accept_type or '*/*' in accept_type):
             self.responseObject.send_html(self.bad_request_html)
-        else:
-            self.responseObject.send()

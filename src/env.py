@@ -20,5 +20,3 @@ class dotenv:
         if(arg in self.__variables):
             return self.__variables[arg]
         return None
-
-    

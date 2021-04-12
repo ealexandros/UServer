@@ -1,14 +1,13 @@
 from UServer import UServer
+from UMiddlewares import BodyJson
 
 app = UServer(3000, host="0.0.0.0")
 
-def cooler(req, res):
-    print(100)
-    return True
-
-@app.get('/person/:id', middlewares=[cooler])
+@app.router.get('/person/:id', middlewares=[BodyJson])
 def cool(req, res):
     res.send_json({ 'response': req.url_param('id') })
+
+app.static('./src')
 
 app.start()
 

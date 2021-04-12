@@ -5,7 +5,7 @@ try:
 except:
     import uos as os
 
-class path:
+class upath:
     @staticmethod
     def get_correct_slash():
         if(sys.platform[0:3] == 'win'):
@@ -27,11 +27,11 @@ class path:
         dirs = []
 
         for dirent in os.listdir(root):
-            if(path.isfile(root + path.get_correct_slash() + dirent)):
+            if(upath.isfile(root + upath.get_correct_slash() + dirent)):
                 files.append(dirent)
             else:
                 dirs.append(dirent)
         yield root, dirs, files
 
         for i in dirs:
-            yield from path.walk(root + path.get_correct_slash() + i)
+            yield from upath.walk(root + upath.get_correct_slash() + i)

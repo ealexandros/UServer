@@ -22,16 +22,16 @@ class Request:
 
     def __parse_request(self):
         self.__request_type = re.findall(r'[A-Z]+', self.__request[0])[0]
-        self.__http_path = re.findall(r"[/][A-Za-z-_0-9+/]*", self.__request[0])[0]
-        self.__http_path_list = re.findall(r'([A-Za-z0-9_-]|[:])+', self.__http_path)
+        self.__http_path = self.__request[0].replace(self.__request_type, '').strip().split(' ')[0]
+        self.__http_path_list = list(map(lambda x: '/' + x, self.__http_path.split('/')[1:]))
         self.__http_version = re.findall(r'(HTTP[/][0-9.]*|HTTPS[/][0-9.]*)', self.__request[0])[0]
 
         for header in self.__request[1:]:
-            if(header.count(':') == 1):
-                header_split = header.split(':')
-                self.__headers[header_split[0].strip()] =  header_split[1].strip()
-            elif(header == '\r\n' or header == '\n'):
+            if(header == '\r\n' or header == '\n'):
                 break
+            elif(':' in header):
+                header_split = re.one_cut_split(r'[:]', header)
+                self.__headers[header_split[0].strip()] =  header_split[1].strip()
 
         if('Content-Length' in self.__headers and int(self.__headers['Content-Length']) > 0):
             raw_body = self.__request[-1].strip()

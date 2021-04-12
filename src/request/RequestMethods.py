@@ -6,12 +6,17 @@ class RequestMethods:
         self.valid_methods = ["GET", "POST", "PUT", "PATCH", "OPTIONS", "DELETE"]
 
     def handle_methods(self, path, callback, method):
-        path_validation = re.findall(r'[/]([A-Za-z0-9_-]|[:]|[/])+', path)[0]
+        path_validation = re.findall(r'[/]([A-Za-z0-9_-]|[:]|[/]|[.])*', path)[0]
         if(path_validation != path):
             raise Exception('Invalid path name.')
 
-        path = re.findall(r'([A-Za-z0-9_-]|[:])+', path)
+        path = re.findall(r'[/]([A-Za-z0-9_-]|[:]|[.])*', path)
         self.userver.router_paths.append([path, callback, method])
+
+    def static_content(self, path, content):
+        def callback(req, res):
+            res.send_content(path, content)
+        self.handle_methods(path, [callback], 'GET')
 
     def on(self, path, req_method, callback, middlewares=[]):
         if(req_method not in self.valid_methods):

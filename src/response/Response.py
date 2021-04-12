@@ -60,6 +60,17 @@ class Response:
     def send_xml(self, data, headers={}):
         self.send(data, 'application/xml', headers)
 
+    def send_content(self, path, data):
+        extention = '.'.join(path.split('.')[1:])
+        if(extention == 'html'):
+            self.send_html(data)
+        elif(extention == 'css'):
+            self.send_css(data)
+        elif(extention == 'js'):
+            self.send_javascript(data)
+        else:
+            self.send_plain(data)
+
     def close(self):
         self.__client.close()
 

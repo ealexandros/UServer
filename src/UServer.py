@@ -1,5 +1,5 @@
-# import network
-import traceback
+import network
+# import traceback
 
 from request.RequestHandler import Request
 from request.RequestMethods import RequestMethods
@@ -10,9 +10,7 @@ from response.BadRespond import BadRespond
 from response.ErrorResponse import ErrorResponse
 
 from helpers.RegexHelpers import uregex as re
-
-# Debug..
-from UMiddlewares import ParamValidation, BodyJson, RequestLog
+from helpers.OSPath import upath
 
 try:
     import usocket as socket
@@ -49,24 +47,44 @@ class UServer:
         return self.__error_respond
 
     def start(self, logger=False, function=False):
-
         def handler(callback):
             callback()
-        # sta_if = network.WLAN(network.STA_IF)
-        # if(sta_if.isconnected()):
-        if(True):
+        sta_if = network.WLAN(network.STA_IF)
+        if(sta_if.isconnected()):
+        # if(True):
             self.logger.active = logger
 
             self.__start_listening()
             if(self.__block):
                 self.__handle_server()
             else:
-                # threading.start_new_thread(self.__handle_server, ())
-                threading.Thread(target=self.__handle_server, daemon=True).start()
+                threading.start_new_thread(self.__handle_server, ())
+                # threading.Thread(target=self.__handle_server, daemon=True).start()
             if(function):
                 return handler
         else:
-            raise Exception('No WIFI connection.')
+            raise Exception('No WiFi connection.')
+
+    def static(self, dir_name):
+        base_path = '/' + dir_name.split(upath.get_correct_slash())[-1]
+        if('.' in base_path):
+            raise Exception('Invalid folder name: ' + base_path)
+
+        try:
+            for path, dirs, files in upath.walk(dir_name):
+                path_validation = '.' + re.findall(r'[\\/]([A-Za-z0-9_-]|[\\/]|[.])*', path)[0]
+                if(path_validation != path):
+                    raise Exception('Invalid path name.')
+                elif(any(list(filter(lambda x: '.' in x, dirs)))):
+                    raise Exception('Invalid folder name. Folders must not contain . characters')
+
+                middle_path = path.replace(dir_name, '/').replace(upath.get_correct_slash(), '/')[1:] + '/'
+                for f in files:
+                    with open(path + upath.get_correct_slash() + f, 'r') as fil:
+                        self.router.static_content(base_path + middle_path + f, "".join(fil.readlines()))
+        except Exception as e:
+            print('Can\'t create static folder.')
+            print(e)
 
     def __start_listening(self):
         addr = socket.getaddrinfo(self.__host, self.__port)[0][-1]
@@ -79,8 +97,8 @@ class UServer:
         for path, callbacks, method in self.__router_paths:
             if(method == __request.method and len(path) == len(__request.path_list)):
                 for defined_path, req_path in list(zip(path, __request.path_list)):
-                    if(defined_path[0] == ':'):
-                        url_params[defined_path[1:]] = req_path
+                    if(len(defined_path) > 1 and defined_path[1] == ':'):
+                        url_params[defined_path[2:]] = req_path[1:]
                     elif(defined_path != req_path):
                         break
                 else:
@@ -106,7 +124,7 @@ class UServer:
                         http_request_raw += client.recv(1024).decode()
                     except:
                         break
-                http_request_body_split = re.one_cut_split(r"\r\n\r\n|\n\n", http_request_raw.strip())
+                http_request_body_split = re.one_cut_split("\r\n\r\n|\n\n", http_request_raw.strip())
                 find_line_feed = lambda s: '\r\n' if('\r\n' in s) else '\n'
                 http_request_list = http_request_body_split[0].split(find_line_feed(http_request_body_split[0])) \
                                         + [find_line_feed(http_request_body_split[0]), http_request_body_split[1]]
@@ -117,17 +135,20 @@ class UServer:
                         self.logger.action(__request)
                     __response = Response(client)
                     self.__router(__request, __response)
+                else:
+                    client.close()
             except:
-                traceback.print_exc()
+                # traceback.print_exc()
                 client.close()
 
-app = UServer(port=3000)
+# app = UServer(port=3000)
 
-@app.router.post('/adfsd/:id', middlewares=[RequestLog])
-def cool(req, res):
-    res.send_json({ 'response': req.url_param('id') })
+# @app.router.post('/adfsd/:id')
+# def cool(req, res):
+#     res.send_json({ 'response': req.url_param('id') })
 
-app.start(logger=True)
+# app.static('.\\example\\src')
+# app.start(logger=True)
 
-while(True):
-    pass
+# while(True):
+#     pass
