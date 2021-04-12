@@ -1,6 +1,6 @@
 import os
 
-class env:
+class dotenv:
     def __init__(self, rpath):
         self.__rpath = rpath
         self.__variables = {}
