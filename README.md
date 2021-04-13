@@ -49,12 +49,12 @@ After cloning the repository you need to type the following command:
 
 ##### Windows
 ```bash
-.\Userver> .\flash.bat -l *communicaiton_port*
+.\Userver\helpers> .\flash.bat -l *communicaiton_port*
 ```
 
 ##### Linux
 ```bash
-.\Userver> ./flash -l *communicaiton_port*
+.\Userver\helpers> ./flash -l *communicaiton_port*
 ```
 
 Where the communication port is the port in which your microcontroller is connected.
@@ -63,7 +63,7 @@ Where the communication port is the port in which your microcontroller is connec
 
 ## 📃 Documentation
 
-The complete documantation you can find in the `./example/README.md` [file](https://github.com/alexandros44/UServer/blob/main/example/README.md). There are also some applications that demonstrate how this library works in the `./example` folder. Over the time i will make more of these applications for better understanding. The most essential applications are:
+The complete documantation you can find in the `./example/README.md` [file](https://github.com/alexandros44/UServer/blob/main/example/README.md). There are also some applications that demonstrate how this library works in the `./example` folder. Over the time i will make more of these applications for better understanding. The most essential applications/examples are:
 
 1. **setup.py**, starts up the server. You can find it [here]().
 2. **options.py**, adding middlewares, logging, etc. You can find it [here]().
