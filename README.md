@@ -22,7 +22,7 @@ Inside this repository you will find a HTTP web server compatable with micropyth
 1. **Sockets**, which helped me with the web API.
 2. **Regex**, which helped me with finding patterns in strings. 
 
-**P.S**: Some `regex` functions like are not included in the `re` library in micropython so there is an additional class in [./src/helpers/RegexHelpers](https://github.com/alexandros44/UServer/blob/main/src/helpers/RegexHelpers.py) for all the missing ones.
+**P.S**: Some `regex` and `os` functions like **findall**, **walk** etc, are not included in the base libraries in micropython, so there is an additional files in [./src/helpers/RegexHelpers.py](https://github.com/alexandros44/UServer/blob/main/src/helpers/RegexHelpers.py) and [./src/helpers/OSPath.py](https://github.com/alexandros44/UServer/blob/main/src/helpers/OSPath.py) for the implamentation of them.
  
 ## 📦 Requirements
 
@@ -63,11 +63,11 @@ Where the communication port is the port in which your microcontroller is connec
 
 ## 📃 Documentation
 
-The complete documantation you can find in the `./example/README.md` [file](https://github.com/alexandros44/UServer/blob/main/example/README.md). There are also some applications that demonstrate how this library works in the `./example` folder. Over the time i will make more of these applications for better understanding. The most essential applications/examples are:
+The complete documantation you can find in the [./examples/README.md](https://github.com/alexandros44/UServer/blob/main/examples/README.md) file. There are also some applications that demonstrate how this library works in the `./example` folder. Over the time i will make more of these applications for better understanding. The most essential applications/examples are:
 
-1. **setup.py**, starts up the server. You can find it [here]().
-2. **options.py**, adding middlewares, logging, etc. You can find it [here]().
-3. **middlewares.py**, creating and added middlewares. You can find it [here]().
+1. **[setup.py](https://github.com/alexandros44/UServer/blob/main/examples/setup.py)**, starts up the server.
+2. **[options.py](https://github.com/alexandros44/UServer/blob/main/examples/options.py)**, adding middlewares, logging, etc.
+3. **[middlewares.py](https://github.com/alexandros44/UServer/blob/main/examples/middlewares.py)**, creating and added middlewares.
 
 
 ## ✨Conclusion
