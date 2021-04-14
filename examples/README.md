@@ -12,6 +12,9 @@ So lets start!
 - [Setup](#-setup.py)
     - [Basic Setup](#basic-setup)
     - [Routes](#routes)
+    - [Functions](#functions)
+        - [Request](#request)
+        - [Response](#response)
     - [URL Params](#url-params)
     - [App Start](#app-start)
 - [Middlewares](#-middlewares)
@@ -77,6 +80,60 @@ def change_person_info(req, res):
     res.send('this is your id' + url_id)
 ```
 
+##### Request
+
+The request class has the next properties,
+
+```
+1. req.method       ->  gives the method `POST, DELETE etc`.
+2. req.path         ->  gives the path `/person/18467124`.
+3. req.path_list    ->  gives the path as a list `['/person', '18467124']`.
+4. reg.http_version ->  gives the HTTP version `1.1, 2 etc`.
+5. req.addr         ->  gives the IP address of the client `192.168.1.10`.
+6. req.port         ->  gives the port of the client `12847`.
+7. req.content_type ->  gives the content type of the body `text/html`.
+```
+
+The __request class has the next methods,
+
+```
+1. req.url_param(\*param_name\*)    ->  gets the url params `:id`.
+2. req.body(\*param_name\*)         ->  gets the application body. If the body is not a json file, for the \*param_name\* type `__raw__` and you will get the hole body.
+
+3. req.param(\*param_name\*)        ->  gets the params of the request `?test=true`.
+4. req.header(\*header_name\*)      ->  gets a header `Content-Type etc`.
+```
+
+All of the above functions will return None if they wont find the parameter you are looking.
+
+##### Response
+
+The response class has the next properties,
+
+```
+1. status   ->  gives the status code that we will send back.
+```
+
+The response class has the next methods,
+
+```
+1. res.send_plain(*data*, *extra_headers*)      ->  sends plain text.
+2. res.send_json(*data*, *extra_headers*)       ->  sends json.
+3. res.send_html(*data*, *extra_headers*)       ->  sends html.
+4. res.send_css(*data*, *extra_headers*)        ->  sends css.
+5. res.send_javascript(*data*, *extra_headers*) ->  sends jsvascript.
+6. res.send_xml(*data*, *extra_headers*)        ->  sends xml.
+```
+
+All of the above methods can take extra headers. the headers **must** be an object. For example,
+
+```python
+headers = {
+    'Content-Type': 'text/css',
+    'Server': 'ESP'
+}
+```
+
 ### URL params
 
 For creating **get, post, delete, put, etc** routes. The path in the \*path\* should be the path you would like to create. You also can create different type of url parameters. For example in the setup.py we can see on the line 5 we have a `/:id`. The :id is a parameters which we can get with the next command,
@@ -110,6 +167,9 @@ Output: The server is starting after this function
 
 The `app.start()` command can take the following parameters,
 
-1. logger=(True, default=Flase), which will log every HTTP request that comes to you.
-2. block=(True, default=Flase), if the blocking is True then the code below your start command will not run.
-3. function=(True default=False), executes a predifined function before starting the server.
+1. **logger**, which will log every HTTP request that comes to you.
+2. **block**, if the blocking is True then the code below your start command will not run.
+3. **function**, executes a predifined function before starting the server.
+
+All of the parameters above can take ```True or False```. The default value of all is False.
+

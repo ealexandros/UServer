@@ -81,7 +81,7 @@ class Request:
             return self.__body[body_name]
         return None
 
-    def params(self, param_name):
+    def param(self, param_name):
         if(param_name in self.__params):
             return self.__params[param_name]
         return None
