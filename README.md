@@ -1,4 +1,4 @@
-# UServer ![version](https://img.shields.io/badge/version-1.0.0-brightengreen) ![micropytho](https://img.shields.io/badge/micropython-blue)
+# UServer ![micropytho](https://img.shields.io/badge/micropython-blue) ![version](https://img.shields.io/badge/version-1.0.0-brightengreen)
 
 *This is a micropython HTTP web application server repository.*
 
@@ -70,7 +70,7 @@ The complete documantation you can find in the [./examples/README.md](https://gi
 3. **[middlewares.py](https://github.com/alexandros44/UServer/blob/main/examples/middlewares.py)**, creating and added middlewares.
 
 
-## ✨Conclusion
+## ✨ Conclusion
 
 This project gave me a lot of new knowledge about the HTTP (HyperText Transfer Protocol). Started it for fun but ended up making it a github repository.
 

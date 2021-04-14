@@ -1,5 +1,4 @@
 import network
-# import traceback
 
 from request.RequestHandler import Request
 from request.RequestMethods import RequestMethods
@@ -46,22 +45,29 @@ class UServer:
     def error(self):
         return self.__error_respond
 
+    def __blocking_loop(self):
+        try:
+            while(True):
+                pass
+        except KeyboardInterrupt:
+            exit(0)
+
     def start(self, logger=False, function=False):
         def handler(callback):
             callback()
-        sta_if = network.WLAN(network.STA_IF)
-        if(sta_if.isconnected()):
-        # if(True):
+            if(self.__block):
+                self.__blocking_loop()
+                
+        if(network.WLAN(network.STA_IF).isconnected()):
             self.logger.active = logger
 
             self.__start_listening()
-            if(self.__block):
-                self.__handle_server()
-            else:
-                threading.start_new_thread(self.__handle_server, ())
-                # threading.Thread(target=self.__handle_server, daemon=True).start()
+            threading.start_new_thread(self.__handle_server, ())
+
             if(function):
                 return handler
+            if(self.__block):
+                self.__blocking_loop()
         else:
             raise Exception('No WiFi connection.')
 
@@ -138,17 +144,4 @@ class UServer:
                 else:
                     client.close()
             except:
-                # traceback.print_exc()
                 client.close()
-
-# app = UServer(port=3000)
-
-# @app.router.post('/adfsd/:id')
-# def cool(req, res):
-#     res.send_json({ 'response': req.url_param('id') })
-
-# app.static('.\\example\\src')
-# app.start(logger=True)
-
-# while(True):
-#     pass
