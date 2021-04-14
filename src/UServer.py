@@ -22,7 +22,7 @@ except:
     import _thread as threading
 
 class UServer:
-    def __init__(self, port, block=False, host='127.0.0.1'):
+    def __init__(self, port, host='127.0.0.1'):
         self.__port = port
         self.__host = host
         self.__block = block
@@ -52,7 +52,7 @@ class UServer:
         except KeyboardInterrupt:
             exit(0)
 
-    def start(self, logger=False, function=False):
+    def start(self, logger=False, block=False, function=False):
         def handler(callback):
             callback()
             if(self.__block):
