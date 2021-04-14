@@ -98,7 +98,7 @@ The __request class has the next methods,
 
 ```
 1. req.url_param(\*param_name\*)    ->  gets the url params `:id`.
-2. req.body(\*param_name\*)         ->  gets the application body. If the body is not a json file, for the \*param_name\* type `__raw__` and you will get the hole body.
+2. req.body(\*param_name\*)         ->  gets the application body. If the body is not a json file, for the *param_name* type `__raw__` and you will get the hole body.
 
 3. req.param(\*param_name\*)        ->  gets the params of the request `?test=true`.
 4. req.header(\*header_name\*)      ->  gets a header `Content-Type etc`.
