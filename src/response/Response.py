@@ -41,8 +41,7 @@ class Response:
         self.close()
 
     def send_plain(self, data, headers={}):
-        data_to_json = json.dumps(data)
-        self.send(data_to_json, 'text/plain', headers)
+        self.send(data, 'text/plain', headers)
 
     def send_json(self, data, headers={}):
         data_to_json = json.dumps(data)

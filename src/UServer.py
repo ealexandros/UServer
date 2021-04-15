@@ -1,6 +1,7 @@
-import network
+# import network
+import traceback
 
-from request.RequestHandler import Request
+from request.Request import Request
 from request.RequestMethods import RequestMethods
 from request.Logger import Logger
 
@@ -10,6 +11,8 @@ from response.ErrorResponse import ErrorResponse
 
 from helpers.RegexHelpers import uregex as re
 from helpers.OSPath import upath
+
+from docs.UDocs import UDocs
 
 try:
     import usocket as socket
@@ -25,13 +28,17 @@ class UServer:
     def __init__(self, port, host='127.0.0.1'):
         self.__port = port
         self.__host = host
-        self.__block = block
 
         self.__router_paths = []
 
         self.__error_respond = ErrorResponse()
         self.__request_methods = RequestMethods(self)
         self.logger = Logger()
+        self.__docs = UDocs(self)
+
+    @property
+    def docs(self):
+        return self.__docs
 
     @property
     def router_paths(self):
@@ -52,21 +59,25 @@ class UServer:
         except KeyboardInterrupt:
             exit(0)
 
-    def start(self, logger=False, block=False, function=False):
+    def start(self, logger=False, doc_path='/docs', show_docs=True, block=False, function=False):
         def handler(callback):
             callback()
-            if(self.__block):
+            if(block):
                 self.__blocking_loop()
                 
-        if(network.WLAN(network.STA_IF).isconnected()):
+        # if(network.WLAN(network.STA_IF).isconnected()):
+        if(True):
             self.logger.active = logger
+            if(show_docs):
+                self.__docs.start(doc_path)
 
             self.__start_listening()
-            threading.start_new_thread(self.__handle_server, ())
+            # threading.start_new_thread(self.__handle_server, ())
+            threading.Thread(target=self.__handle_server, daemon=True).start()
 
             if(function):
                 return handler
-            if(self.__block):
+            if(block):
                 self.__blocking_loop()
         else:
             raise Exception('No WiFi connection.')
@@ -100,7 +111,7 @@ class UServer:
 
     def __router(self, __request, __response):
         url_params = {}
-        for path, callbacks, method in self.__router_paths:
+        for path, callbacks, method, _ in self.__router_paths:
             if(method == __request.method and len(path) == len(__request.path_list)):
                 for defined_path, req_path in list(zip(path, __request.path_list)):
                     if(len(defined_path) > 1 and defined_path[1] == ':'):
@@ -144,4 +155,14 @@ class UServer:
                 else:
                     client.close()
             except:
+                traceback.print_exc()
                 client.close()
+
+app = UServer(port=3000)
+
+@app.router.post('/person')
+def create_person(req, res):
+    res.send_json({ 
+        'response': True })
+
+app.start(block=True, logger=True)

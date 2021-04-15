@@ -15,6 +15,11 @@ class uregex:
         return matches
 
     @staticmethod
+    def match(regex, text):
+        regex_filter = re.compile(regex)
+        return regex_filter.split(text) != None
+
+    @staticmethod
     def split(regex, text):
         regex_filter = re.compile(regex)
         return regex_filter.split(text)

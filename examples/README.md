@@ -172,4 +172,3 @@ The `app.start()` command can take the following parameters,
 3. **function**, executes a predifined function before starting the server.
 
 All of the parameters above can take ```True or False```. The default value of all is False.
-
