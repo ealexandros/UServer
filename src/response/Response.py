@@ -17,6 +17,8 @@ class Response:
         self.accept_ranges = 'bytes'
         self.accept = '*/*'
 
+        self.__cors = None
+
     def send(self, data="", content_type='text/plain', headers={}):
         http_builder = "{} {} {}\r\n".format(self.HTTP_VERSION, self.__status, HTTP_STATUS_CODES[str(self.__status)])
         http_builder += "Server: {}\r\n".format(self.server)
@@ -25,10 +27,13 @@ class Response:
         http_builder += "Accept-Ranges: {}\r\n".format(self.accept_ranges)
         http_builder += "Accept: {}\r\n".format(self.accept)
         http_builder += "Content-Length: {}\r\n".format(len(data))
-        
+
+        if(self.__cors != None):
+            http_builder += "Access-Control-Allow-Origin: {}\r\n".format(self.__cors)
+
         if(type(headers) == dict and len(headers) > 0):
-            for key, value in headers:
-                http_builder += "{}: {}\r\n".format(key, value)
+            for key in headers:
+                http_builder += "{}: {}\r\n".format(key, headers[key])
 
         if(data != ""):
             http_builder += "Content-Type: {}\r\n".format(content_type)
@@ -72,6 +77,9 @@ class Response:
 
     def close(self):
         self.__client.close()
+
+    def cors(self, value):
+        self.__cors = value
 
     @property
     def status(self):

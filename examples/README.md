@@ -170,5 +170,7 @@ The `app.start()` command can take the following parameters,
 1. **logger**, which will log every HTTP request that comes to you.
 2. **block**, if the blocking is True then the code below your start command will not run.
 3. **function**, executes a predifined function before starting the server.
+4. **show_doc**, enables the auto documentation.
+5. **doc_path**, which will change the default path for the documentation.
 
-All of the parameters above can take ```True or False```. The default value of all is False.
+The first 1-4 parameters can take ```True or False```. Their default value of is False, except for the 4 which is True. Lastly, the 5 parameters can take a valid string path. Its default value is /docs.

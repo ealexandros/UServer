@@ -52,6 +52,10 @@ class UServer:
     def error(self):
         return self.__error_respond
 
+    @property
+    def port(self):
+        return self.__port
+
     def __blocking_loop(self):
         try:
             while(True):
@@ -59,7 +63,7 @@ class UServer:
         except KeyboardInterrupt:
             exit(0)
 
-    def start(self, logger=False, doc_path='/docs', show_docs=True, block=False, function=False):
+    def start(self, logger=False, doc_path='/docs', show_doc=True, block=False, function=False):
         def handler(callback):
             callback()
             if(block):
@@ -68,7 +72,7 @@ class UServer:
         # if(network.WLAN(network.STA_IF).isconnected()):
         if(True):
             self.logger.active = logger
-            if(show_docs):
+            if(show_doc):
                 self.__docs.start(doc_path)
 
             self.__start_listening()
@@ -162,6 +166,11 @@ app = UServer(port=3000)
 
 @app.router.post('/person')
 def create_person(req, res):
+    res.send_json({ 
+        'response': True })
+
+@app.router.delete('/post/:id')
+def delete_person(req, res):
     res.send_json({ 
         'response': True })
 

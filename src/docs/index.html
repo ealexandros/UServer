@@ -4,17 +4,60 @@
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>docs</title>
+        <title>Docs</title>
 
         <link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     </head>
-    <body>
-        <h1>Docs</h1>
+    <body class="mb-24" style="background-color: #F3F3F3;">
+        <div class="w-4/5 m-auto text-center">
+            <h1 class="font-bold sm:text-5xl mt-12 mb-6"><span style="color: #4C58D8">Docu</span>mentation!</h1>
+            <div class="w-2/5 m-auto" style="border-top: 3px solid #4C58D8"></div>
+            <div class="row justify-content-around text-center" id="card-holder"></div>
+        </div>
 
         <script>
-            fetch('http://127.0.0.1:3000/docs/json')
+            const cardHolder = document.getElementById('card-holder');
+            cardHolder.innerHTML = '';
+
+            fetch('%s')
                 .then(response => response.json())
-                .then(data => console.log(data));
+                .then(object => {
+                    for (const path in object) {
+                        let desc = 'There is not a description made here. You can create by adding a description parameter on the @app.router().';
+                        if(object[path]['description'] != '') desc = object[path]['description'];
+
+                        let bcolor = '#5762c5';
+                        if (object[path]['method'] == 'POST' || object[path]['method'] == 'PUT' || object[path]['method'] == 'PATCH') bcolor = '#25B882';
+                        else if (object[path]['method'] == 'DELETE') bcolor = '#DC5F5F'
+
+                        let codes = `There are no return codes.`;
+                        if(Object.keys(object[path]['status_codes']).length !== 0) {
+                            codes = '';
+                            for (const code in object[path]['status_codes']) {
+                                codes += '<span class="font-bold">' + code + '</span>' + ': ' + object[path]['status_codes'][code];
+                                codes += '<br />'
+                            }
+                        }
+
+                        cardHolder.innerHTML += `
+                            <div class='col-lg-3  ml-1 mr-1 col-md-4 mt-20 rounded-xl shadow-md' style='background-color: ${bcolor};'>
+                                <div class='flex flex-nowrap mt-8 mb-3 ml-4 items-end text-gray-100'>
+                                    <h2 class='text-4xl'>${object[path]['method']}</h2>
+                                    <p class='ml-3 text-md'>${path}</p>
+                                </div>
+                                <div class='w-full mb-4' style='border-top: 3px solid #f3f3f3e7'></div>
+                                <p class='text-md text-gray-100 text-left ml-3 mb-4 w-11/12'>${desc}</p>
+                                <div class='w-full mb-4' style='border-top: 3px solid #f3f3f3e7'></div>
+                                <p class='text-gray-100 text-opacity-80 mb-8 text-left ml-3'>${codes}</p> 
+                            </div>
+                        `;
+                    }
+                });
         </script>
+
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     </body>
 </html>

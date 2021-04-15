@@ -1,5 +1,9 @@
 from helpers.TerminalColors import tcolors
 
+def EnableCors(req, res):
+    res.cors('*')
+    return True
+
 def BodyJson(req, res):
     if(req.header("Content-Type") == 'application/json' and req.body("__raw__") == None):
         return True
