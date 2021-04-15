@@ -22,7 +22,7 @@ class UDocs:
         try:
             with open('src/docs/index.html', 'r') as fil:
                 data = "".join(fil.readlines())
-            UDocs.__docs_html = data%('http://127.0.0.1:{}{}/json'.format(self.__userver.port, UDocs.__path))
+            UDocs.__docs_html = data%('http://{}:{}{}/json'.format(self.__userver.addr, self.__userver.port, UDocs.__path))
         except:
             print('FileError: Can not open the path of documentation index.html.')
 

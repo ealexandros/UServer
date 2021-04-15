@@ -56,6 +56,12 @@ class UServer:
     def port(self):
         return self.__port
 
+    @property
+    def addr(self):
+        # if(self.__host == '0.0.0.0'):
+        #     return network.WLAN(network.STA_IF).ifconfig()[0]
+        return self.__host
+
     def __blocking_loop(self):
         try:
             while(True):
@@ -166,11 +172,6 @@ app = UServer(port=3000)
 
 @app.router.post('/person')
 def create_person(req, res):
-    res.send_json({ 
-        'response': True })
-
-@app.router.delete('/post/:id')
-def delete_person(req, res):
     res.send_json({ 
         'response': True })
 
