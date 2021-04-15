@@ -1,6 +1,6 @@
 from UServer import UServer
 
-app = UServer(port=3000)
+app = UServer(port=3000, host='0.0.0.0')
 
 @app.router.get('/person/:id')
 def get_person(req, res):
@@ -38,7 +38,7 @@ def change_person_info(req, res):
         'id': url_id,
         'fname': fname }})
 
-app.start()
+app.start(logger=True)
 
 while(True):
     # ..More Business Logic.. #

@@ -3,13 +3,13 @@ from UMiddlewares import BodyParser, ParamValidation
 
 app = UServer(port=3000, host='0.0.0.0')
 
-def mid_function(res, req):
+def intercept(res, req):
     print('I am a middleware..')
     if(req.port == 1000):
         return True
     return Exception('wrong port number')
 
-@app.router.post('/person', middlewares=[BodyParser, ParamValidation, mid_function])
+@app.router.post('/person', middlewares=[BodyParser, ParamValidation, intercept])
 def create_person(req, res):
     fname = req.body('fname')
     lname = req.body('lname')

@@ -20,7 +20,7 @@ class UDocs:
 
     def __get_html(self):
         try:
-            with open('src/docs/index.html', 'r') as fil:
+            with open('lib/docs/index.html', 'r') as fil:
                 data = "".join(fil.readlines())
             UDocs.__docs_html = data%('http://{}:{}{}/json'.format(self.__userver.addr, self.__userver.port, UDocs.__path))
         except:
@@ -36,10 +36,11 @@ class UDocs:
     @staticmethod
     def __expose_docs_json(req, res):
         response_json = {}
-        for route in UDocs.__routes_paths:
+        for index, route in enumerate(UDocs.__routes_paths):
             route_path = "".join(route[0])
             if(route_path != UDocs.__path and route_path != UDocs.__path + '/json'):
-                response_json.update({ route_path: {
+                response_json.update({ index : {
+                    'path': route_path,
                     'method': route[2],
                     'description': route[3][0],
                     'status_codes': route[3][1]

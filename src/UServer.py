@@ -1,5 +1,4 @@
-# import network
-import traceback
+import network
 
 from request.Request import Request
 from request.RequestMethods import RequestMethods
@@ -58,8 +57,8 @@ class UServer:
 
     @property
     def addr(self):
-        # if(self.__host == '0.0.0.0'):
-        #     return network.WLAN(network.STA_IF).ifconfig()[0]
+        if(self.__host == '0.0.0.0'):
+            return network.WLAN(network.STA_IF).ifconfig()[0]
         return self.__host
 
     def __blocking_loop(self):
@@ -75,15 +74,13 @@ class UServer:
             if(block):
                 self.__blocking_loop()
                 
-        # if(network.WLAN(network.STA_IF).isconnected()):
-        if(True):
+        if(network.WLAN(network.STA_IF).isconnected()):
             self.logger.active = logger
             if(show_doc):
                 self.__docs.start(doc_path)
 
             self.__start_listening()
-            # threading.start_new_thread(self.__handle_server, ())
-            threading.Thread(target=self.__handle_server, daemon=True).start()
+            threading.start_new_thread(self.__handle_server, ())
 
             if(function):
                 return handler
@@ -165,14 +162,4 @@ class UServer:
                 else:
                     client.close()
             except:
-                traceback.print_exc()
                 client.close()
-
-app = UServer(port=3000)
-
-@app.router.post('/person')
-def create_person(req, res):
-    res.send_json({ 
-        'response': True })
-
-app.start(block=True, logger=True)
