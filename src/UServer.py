@@ -74,6 +74,7 @@ class UServer:
             if(block):
                 self.__blocking_loop()
                 
+        # if(True):
         if(network.WLAN(network.STA_IF).isconnected()):
             self.logger.active = logger
             if(show_doc):
@@ -81,6 +82,7 @@ class UServer:
 
             self.__start_listening()
             threading.start_new_thread(self.__handle_server, ())
+            # threading.Thread(target=self.__handle_server, daemon=True).start()
 
             if(function):
                 return handler

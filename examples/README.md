@@ -18,6 +18,10 @@ So lets start!
     - [URL Params](#url-params)
     - [App Start](#app-start)
 - [Middlewares](#-middlewares)
+    - [UMiddlewares.py](#umiddlewares.py)
+    - [Middleware Setup](#middleware-setup)
+    - [Error Overriding](#error-overriding)
+    - [Middleware Queue](#middleware-queue)
 - [Options](#-options)
 
 ## ▶ Boot.py
@@ -123,6 +127,7 @@ The response class has the next methods,
 4. res.send_css(*data*, *extra_headers*)        ->  sends css.
 5. res.send_javascript(*data*, *extra_headers*) ->  sends jsvascript.
 6. res.send_xml(*data*, *extra_headers*)        ->  sends xml.
+7. res.cors(*cors_flag*)                        ->  adds cors header flag.
 ```
 
 All of the above methods can take extra headers. the headers **must** be an object. For example,
@@ -174,3 +179,74 @@ The `app.start()` command can take the following parameters,
 5. **doc_path**, which will change the default path for the documentation.
 
 The first 1-4 parameters can take ```True or False```. Their default value of is False, except for the 4 which is True. Lastly, the 5 parameters can take a valid string path. Its default value is /docs.
+
+## 🔀 Middlewares.py
+
+For better understanding of the middlewares in the userver package you can see the [middlewares.py](https://github.com/alexandros44/UServer/blob/main/examples/setup.py) file. Lets start to analyze that file.
+
+**P.S**: Some parts of the file will be skipped because we have already talked about them. However, every part that we skip there will be a reference in the documentation.
+
+### UMiddlewares.py
+
+First of all we import the UMiddlewares library that cames with the UServer. The `UMiddlewares` is a small number of middleware functions that will help you with some operation. 
+
+More specifically the `UMiddlewares` comes with the below predifined functions,
+```
+BodyParser        -> Checks if the body of the request is type json.
+ParamValidation   -> Checks if the url_params are correct.
+EnableCors        -> Adds a cors header in the HTTP request. The flag is set to (*) by default
+RequestLog        -> Logs every request that happens on the coresponding funvtion.
+```
+
+> More middlewares will be added over the time as this library gets bigger. 
+
+### Middleware Setup
+
+A middleware must have the below signature,
+```python
+def intercept(req, res):
+    # ...
+    return True
+```
+
+As you can see we need to have two parameters. The first one will be the request and the second must be the response. More about those two you can find [here](#request). If you want to continue to the next middleware you need to return True on the function, if not you dont need to return anything.
+
+If you would like to raise an `Exception` you can do it like this,
+```python
+def intercept(req, res):
+    # ...
+    return Exception('error message')
+```
+
+You just need to return an `Exception` with a message. The client will recieve the next json response,
+```
+Output: 
+{
+    error: 'error message'
+}
+```
+
+### Error Overriding
+
+If you dont like this error response message you can change it with the next commands,
+```python
+@app.error.override()
+def error(req, res):
+    # Your code ..
+```
+
+You have to simple add a `@app.error.override` over your function.
+
+### Middleware Queue
+
+If we have the next section of code,
+```python
+@app.router.post('/person', middlewares=[BodyParser, ParamValidation, intercept])
+def create_person(req, res):
+    pass
+```
+
+The first middleware that will be executed will be the middleware on the zero index. More specifically,
+```
+BodyParser -> ParamValidation -> intercept -> create_person
+```

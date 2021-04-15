@@ -3,7 +3,7 @@ from UMiddlewares import BodyParser, ParamValidation
 
 app = UServer(port=3000, host='0.0.0.0')
 
-def intercept(res, req):
+def intercept(req, res):
     print('I am a middleware..')
     if(req.port == 1000):
         return True
