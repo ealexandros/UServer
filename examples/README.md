@@ -1,4 +1,4 @@
-# Documentation ![version](https://img.shields.io/badge/version-1.0.0-brightengreen)
+# Documentation ![version](https://img.shields.io/badge/version-1.0.2-brightengreen)
 
 In **README.md** file you wil find the complete documentation of the `UServer` repository. This file may be chnaged over the time, because more functionality will be added to the project.
 

@@ -75,7 +75,7 @@ class UServer:
                 self.__blocking_loop()
                 
         # if(True):
-        if(network.WLAN(network.STA_IF).isconnected()):
+        if(network.WLAN(network.STA_IF).isconnected() or network.WLAN(network.AP_IF).active()):
             self.logger.active = logger
             if(show_doc):
                 self.__docs.start(doc_path)
@@ -89,7 +89,7 @@ class UServer:
             if(block):
                 self.__blocking_loop()
         else:
-            raise Exception('No WiFi connection.')
+            raise Exception('Wifi is not setup correctly.')
 
     def static(self, dir_name):
         base_path = '/' + dir_name.split(upath.get_correct_slash())[-1]
@@ -120,22 +120,25 @@ class UServer:
 
     def __router(self, __request, __response):
         url_params = {}
-        for path, callbacks, method, _ in self.__router_paths:
-            if(method == __request.method and len(path) == len(__request.path_list)):
-                for defined_path, req_path in list(zip(path, __request.path_list)):
-                    if(len(defined_path) > 1 and defined_path[1] == ':'):
-                        url_params[defined_path[2:]] = req_path[1:]
-                    elif(defined_path != req_path):
-                        break
-                else:
-                    __request.url_params.update(url_params)
-                    for callback in callbacks:
-                        __next = callback(__request, __response)
-                        if(type(__next) == Exception):
-                            self.__error_respond.call(__request, __response, str(__next))
-                            return
-                        elif(__next != True):
-                            return
+        for router in self.__router_paths:
+            for __path in ([router['path']] + router['redirects']):
+                if(router['method'] == __request.method and len(__path) == len(__request.path_list)):
+                    for defined_path, req_path in list(zip(__path, __request.path_list)):
+                        if(len(defined_path) > 1 and defined_path[1] == ':'):
+                            url_params[defined_path[2:]] = req_path[1:]
+                        elif(defined_path == '/*'):
+                            continue
+                        elif(defined_path != req_path):
+                            break
+                    else:
+                        __request.url_params.update(url_params)
+                        for callback in router['callback']:
+                            __next = callback(__request, __response)
+                            if(type(__next) == Exception):
+                                self.__error_respond.call(__request, __response, str(__next))
+                                return
+                            elif(__next != True):
+                                return
         BadRespond(__response, __request).send()
 
     def __handle_server(self):

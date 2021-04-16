@@ -35,16 +35,16 @@ class UDocs:
 
     @staticmethod
     def __expose_docs_json(req, res):
-        response_json = {}
-        for index, route in enumerate(UDocs.__routes_paths):
-            route_path = "".join(route[0])
+        response_json = []
+        for __route in UDocs.__routes_paths:
+            route_path = "".join(__route['path'])
             if(route_path != UDocs.__path and route_path != UDocs.__path + '/json'):
-                response_json.update({ index : {
+                response_json.append({
                     'path': route_path,
-                    'method': route[2],
-                    'description': route[3][0],
-                    'status_codes': route[3][1]
-                }})
+                    'method': __route['method'],
+                    'description': __route['description'],
+                    'status_codes': __route['return_codes']
+                })
         
         res.send_json(response_json)
 
@@ -53,5 +53,5 @@ class UDocs:
         UDocs.__path = self.__validate_path(path)
         self.__get_html()
     
-        self.__userver.router.on(UDocs.__path, 'GET', UDocs.__expose_docs_html, [EnableCors], [])
-        self.__userver.router.on(UDocs.__path + '/json', 'GET', UDocs.__expose_docs_json, [EnableCors], [])
+        self.__userver.router.on(UDocs.__path, 'GET', UDocs.__expose_docs_html, [EnableCors], reverse_stack=True)
+        self.__userver.router.on(UDocs.__path + '/json', 'GET', UDocs.__expose_docs_json, [EnableCors], reverse_stack=True)
