@@ -144,9 +144,9 @@ headers = {
 
 For the path you need to construct it like below,
 ```
-1. /person/:id
-2. /test/*
-3. /test/*/:id
+/person/:id
+/test/*
+/test/*/:id
 ```
 
 In the path we can add url_params `/:id`, which are explained [here](#url-params). There are also the `*` which matches every path possible. For example, if we take the `/test/*/:id` in the code above in order to match that path we will need to go to `/test/*random*/*id*`.
