@@ -15,6 +15,7 @@ So lets start!
     - [Functions](#functions)
         - [Request](#request)
         - [Response](#response)
+    - [Paths and Redirects](#paths-and-redirects)
     - [URL Params](#url-params)
     - [App Start](#app-start)
 - [Middlewares](#-middlewares)
@@ -138,6 +139,24 @@ headers = {
     'Server': 'ESP'
 }
 ```
+
+### Paths and Redirects
+
+For the path you need to construct it like below,
+```
+1. /person/:id
+2. /test/*
+3. /test/*/:id
+```
+
+In the path we can add url_params `/:id`, which are explained [here](#url-params). There are also the `*` which matches every path possible. For example, if we take the `/test/*/:id` in the code above in order to match that path we will need to go to `/test/*random*/*id*`.
+
+If you would like to redirect a client to your desired path you can do it like this,
+```python
+@app.router.*request_method*(*path*, redirects=['/*', '/*/test'])
+```
+
+You can have as many redirects as you want, although they must be valid. If not an `Exception` will be executed.
 
 ### URL params
 
