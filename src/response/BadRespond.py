@@ -1,4 +1,10 @@
 class BadRespond:
+    '''
+        This class sends an error response if a path is not defined in the UServer.__router_paths.
+
+        :response:  This is a Response object.
+        :request:   This is a Request  object.
+    '''
     def __init__(self, response, request):
         self.responseObject = response
         self.responseObject.status = 500

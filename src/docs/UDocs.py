@@ -4,6 +4,12 @@ from helpers.RegexHelpers import uregex as re
 from UMiddlewares import EnableCors
 
 class UDocs:
+    '''
+        This class handles for the auto documentation of the application. It reads the html and
+        adds a path to the UServer.__router_paths. Also it checks for the path validity that the users gives.
+
+        :userver:   A UServer object.
+    '''
     __docs_html = None
     __path = None
     __routes_paths = []

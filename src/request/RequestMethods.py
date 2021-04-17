@@ -1,11 +1,19 @@
 from helpers.RegexHelpers import uregex as re
 
 class RequestMethods:
+    '''
+        This class handles all of the predifined server HTTP Methods. It simply adds to the
+        UServer.__router_paths the paths the server wants to listen on.
+
+        :userver:   A UServer object.
+    '''
     def __init__(self, userver):
         self.__userver = userver
         self.valid_methods = ["GET", "POST", "PUT", "PATCH", "OPTIONS", "DELETE"]
 
     def __path_validation(self, path):
+        if(path == '*'): return ['*']
+
         path_validation = re.findall(r'[/]([A-Za-z0-9_-]|[:]|[/]|[.]|[*])*', path)[0]
         if(path_validation != path):
             raise Exception('Invalid path name. Check your name again: ' + path)

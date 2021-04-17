@@ -148,9 +148,9 @@ headers = {
 
 For the path you need to construct it like below,
 ```
-1. /person/:id
-2. /test/*
-3. /test/*/:id
+/person/:id
+/test/*
+/test/*/:id
 ```
 
 In the path we can add url_params `/:id`, which are explained [here](#url-params). There are also the `*` which matches every path possible. For example, if we take the `/test/*/:id` in the code above in order to match that path we will need to go to `/test/*random*/*id*`.
@@ -158,6 +158,14 @@ In the path we can add url_params `/:id`, which are explained [here](#url-params
 If you would like to redirect a client to your desired path you can do it like this,
 ```python
 @app.router.*request_method*(*path*, redirects=['/*', '/*/test'])
+```
+
+If you want every path to redirect to your functions you just need to add `*` in your path. For example,
+```python
+@app.router.get('/', redirects=['*'])
+def index(req, res):
+    # ..Business Logic
+    res.send('All good')
 ```
 
 You can have as many redirects as you want, although they must be valid. If not an `Exception` will be executed.

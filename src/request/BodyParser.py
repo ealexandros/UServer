@@ -4,6 +4,11 @@ except:
     import ujson as json
 
 class BodyParser:
+    '''
+        Parses the body of the HTTP (HyperText Transfer Protocol) request.
+
+        :body:  The request body in a String format.
+    '''
     def __init__(self, body):
         self.__raw_body = body
 

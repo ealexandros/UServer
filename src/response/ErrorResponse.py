@@ -1,4 +1,7 @@
 class ErrorResponse:
+    '''
+        This class handles if an Exception isreturn in a function.
+    '''
     def __init__(self):
         self.__error_response = self.__default_error_response
 

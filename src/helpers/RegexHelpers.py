@@ -4,6 +4,9 @@ except:
     import ure
 
 class uregex:
+    '''
+        This is an extention of the (re) library.
+    '''
     @staticmethod
     def findall(regex, text):
         matches = []

@@ -1,4 +1,8 @@
 class tcolors:
+    '''
+        This class helps with the logger class. It makes the
+        console print look better.
+    '''
     HEADER = '\033[95m'
     OKBLUE = '\033[94m'
     OKCYAN = '\033[96m'

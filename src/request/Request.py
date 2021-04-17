@@ -2,6 +2,12 @@ from request.BodyParser import BodyParser
 from helpers.RegexHelpers import uregex as re
 
 class Request:
+    '''
+        Handles the request from the client. Parser the whole message and organises all the data.
+
+        :request:   This is a String with the request from the client.
+        :addr:      This is the ip address and the port from the client.
+    '''
     def __init__(self, request, addr):
         self.__request = request
         self.__addr_ip = addr[0]

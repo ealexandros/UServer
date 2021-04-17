@@ -1,6 +1,11 @@
 import os
 
 class dotenv:
+    '''
+        This class opens a (.env) file and parses its values.
+
+        :rpath: the absolute path of the (.env) file.
+    '''
     def __init__(self, rpath):
         self.__rpath = rpath
         self.__variables = {}

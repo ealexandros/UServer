@@ -6,6 +6,9 @@ except:
     import uos as os
 
 class upath:
+    '''
+        This is an extention of the (os) library.
+    '''
     @staticmethod
     def get_correct_slash():
         if(sys.platform[0:3] == 'win'):

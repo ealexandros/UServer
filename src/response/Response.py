@@ -6,6 +6,12 @@ except:
 from response.HTTPResponseCodes import HTTP_STATUS_CODES
 
 class Response:
+    '''
+        This class helps with the response of the server. It creates a basic template for the response.
+        The server can add extra things like headers, different type of responses and also change the status code.
+
+        :client:    This is a socket connection.
+    '''
     def __init__(self, client):
         self.HTTP_VERSION = "HTTP/1.1"
 
