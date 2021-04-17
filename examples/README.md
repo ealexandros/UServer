@@ -6,10 +6,10 @@ So lets start!
 
 ## 📚 Table of Content
 
-- [Boot](#-boot.py)
+- [Boot](#-bootpy)
     - [ENV](#env-module)
     - [ENV tutorial](#how-env-works)
-- [Setup](#-setup.py)
+- [Setup](#-setuppy)
     - [Basic Setup](#basic-setup)
     - [Routes](#routes)
     - [Functions](#functions)
@@ -18,12 +18,12 @@ So lets start!
     - [Paths and Redirects](#paths-and-redirects)
     - [URL Params](#url-params)
     - [App Start](#app-start)
-- [Middlewares](#-middlewares.py)
+- [Middlewares](#-middlewarespy)
     - [UMiddlewares.py](#umiddlewares.py)
     - [Middleware Setup](#middleware-setup)
     - [Error Overriding](#error-overriding)
     - [Middleware Queue](#middleware-queue)
-- [Documentation](#-documentation.py)
+- [Documentation](#-documentationpy)
     - [Default Documentation](#default-documentation)
     - [Documentation Path](#documentation-path)
     - [JSON Documentation](#json-documentation)
