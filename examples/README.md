@@ -23,7 +23,11 @@ So lets start!
     - [Middleware Setup](#middleware-setup)
     - [Error Overriding](#error-overriding)
     - [Middleware Queue](#middleware-queue)
-- [Options](#-options)
+- [Documentation](#-documentation)
+    - [Default Documentation](#default-documentation)
+    - [Documentation Path](#documentation-path)
+    - [JSON Documentation](#json-documentation)
+- [Conclusion](#-conclusion)
 
 ## ▶ Boot.py
 
@@ -201,7 +205,7 @@ The first 1-4 parameters can take ```True or False```. Their default value of is
 
 ## 🔀 Middlewares.py
 
-For better understanding of the middlewares in the userver package you can see the [middlewares.py](https://github.com/alexandros44/UServer/blob/main/examples/setup.py) file. Lets start to analyze that file.
+For a better understanding of the middlewares in the userver package you can see the [middlewares.py](https://github.com/alexandros44/UServer/blob/main/examples/setup.py) file. Lets start to analyze that file.
 
 **P.S**: Some parts of the file will be skipped because we have already talked about them. However, every part that we skip there will be a reference in the documentation.
 
@@ -269,3 +273,65 @@ The first middleware that will be executed will be the middleware on the zero in
 ```
 BodyParser -> ParamValidation -> intercept -> create_person
 ```
+
+## 📃 Documentation
+
+For a better understanding of the auto-documentation in the userver package you can see the [documentation.py](https://github.com/alexandros44/UServer/blob/main/examples/documentation.py) file. Lets see how everything works.
+
+### Default Documentation
+
+The documentation will be generates based on the routes you already gave. For exmple if we have the code below,
+```python
+@app.router.post(*path*)
+def create_(req, res):
+    # ..Business Logic..
+    pass
+```
+
+The `POST` path will be added to the documentation. If you would like to add a description to that path and the response codes that may be returned you can do it like this,
+```python
+@app.router.post('/person', middlewares=[EnableCors],
+    description="You can create a new person by creating a json file with the `username`, `fnmae`, `password` and the `email`",
+    status_codes={
+        '200': 'person created',
+        '404': 'json does not contain all the necessary fields',
+        '409': 'person exist need to change email or password'
+    })
+def create_(req, res):
+    # ..Business Logic..
+    pass
+```
+
+Simply add two extra parameters on the decorator function. (description, status_code)
+
+1. The **description** must be a string type parameter.
+2. The **status_code**, must be an object type parameter.
+
+### Documentation Path
+
+If you want to show the documentation you just need to go to your browser and type the IP address and the port of the host and then add the `/docs` path. More specifically,
+```
+http://xxx.xxx.xxx.xxx:port/docs
+```
+
+The `/docs` is the default path for the documentation. You can change it by changing the `doc_path` in the app.start().
+```python
+app.start(logger=True, doc_path='/test/docs')
+```
+
+If you would like to disable the auto documentation you can do that by changing the parameter `show_doc`in the app.start()
+```python
+app.start(logger=True, show_doc=False)
+```
+
+### JSON Documentation
+
+One more thing to mention is that after the path of the documentation (by default the `/docs`) we have another path with the documentation in json. That path serves the auto documentation in json format. You can look below to understand better the paths,
+```
+http://xxx.xxx.xxx.xxx:port/docs        ->  default auto documentation html
+http://xxx.xxx.xxx.xxx:port/docs/json   ->  default auto documentation json
+```
+
+## ✨ Conclusion
+
+This `README.md` file covers all of the functionality of this repository. Over the time this file will be updated with new stuff as the repository grows.
