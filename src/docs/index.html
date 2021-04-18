@@ -20,7 +20,7 @@
             const cardHolder = document.getElementById('card-holder');
             cardHolder.innerHTML = '';
 
-            fetch('%s')
+            fetch('%json_http_path%')
                 .then(response => response.json())
                 .then(objects => {
                     for (const object in objects) {

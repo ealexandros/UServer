@@ -58,7 +58,9 @@ class Response:
         data_to_json = json.dumps(data)
         self.send(data_to_json, 'application/json', headers)
 
-    def send_html(self, data, headers={}):
+    def send_html(self, data, headers={}, **args):
+        for key in args:
+            data = data.replace('%{}%'.format(key), args[key])
         self.send(data, 'text/html', headers)
 
     def send_css(self, data, headers={}):

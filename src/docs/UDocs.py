@@ -14,8 +14,14 @@ class UDocs:
     __path = None
     __routes_paths = []
 
+    __addr = None
+    __port = None
+
     def __init__(self, userver):
         self.__userver = userver
+
+        UDocs.__addr = self.__userver.addr
+        UDocs.__port = self.__userver.port
 
     def __validate_path(self, doc_path):
         if(re.match(r'[/][A-Za-z0-9/_-]*', doc_path) == False):
@@ -27,15 +33,14 @@ class UDocs:
     def __get_html(self):
         try:
             with open('lib/docs/index.html', 'r') as fil:
-                data = "".join(fil.readlines())
-            UDocs.__docs_html = data%('http://{}:{}{}/json'.format(self.__userver.addr, self.__userver.port, UDocs.__path))
+                UDocs.__docs_html = "".join(fil.readlines())
         except:
             print('FileError: Can not open the path of documentation index.html.')
 
     @staticmethod
     def __expose_docs_html(req, res):
         if(UDocs.__docs_html != None):
-            res.send_html(UDocs.__docs_html)
+            res.send_html(UDocs.__docs_html, json_http_path='http://{}:{}{}/json'.format(UDocs.__addr, UDocs.__port, UDocs.__path))
         else:
             BadRespond(res, req).send()
 
