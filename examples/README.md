@@ -6,10 +6,10 @@ So lets start!
 
 ## 📚 Table of Content
 
-- [Boot](#-boot,py)
+- [Boot](#-bootpy)
     - [ENV](#env-module)
     - [ENV tutorial](#how-env-works)
-- [Setup](#-setup.py)
+- [Setup](#-setuppy)
     - [Basic Setup](#basic-setup)
     - [Routes](#routes)
     - [Functions](#functions)
@@ -18,12 +18,12 @@ So lets start!
     - [Paths and Redirects](#paths-and-redirects)
     - [URL Params](#url-params)
     - [App Start](#app-start)
-- [Middlewares](#-middlewares)
+- [Middlewares](#-middlewarespy)
     - [UMiddlewares.py](#umiddlewares.py)
     - [Middleware Setup](#middleware-setup)
     - [Error Overriding](#error-overriding)
     - [Middleware Queue](#middleware-queue)
-- [Documentation](#-documentation)
+- [Documentation](#-documentationpy)
     - [Default Documentation](#default-documentation)
     - [Documentation Path](#documentation-path)
     - [JSON Documentation](#json-documentation)
@@ -282,7 +282,7 @@ The first middleware that will be executed will be the middleware on the zero in
 BodyParser -> ParamValidation -> intercept -> create_person
 ```
 
-## 📃 Documentation
+## 📃 Documentation.py
 
 For a better understanding of the auto-documentation in the userver package you can see the [documentation.py](https://github.com/alexandros44/UServer/blob/main/examples/documentation.py) file. Lets see how everything works.
 
