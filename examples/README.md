@@ -15,6 +15,7 @@ So lets start!
     - [Functions](#functions)
         - [Request](#request)
         - [Response](#response)
+    - [HTML Parameters](#html-Parameters)
     - [Paths and Redirects](#paths-and-redirects)
     - [URL Params](#url-params)
     - [App Start](#app-start)
@@ -126,13 +127,13 @@ The response class has the next properties,
 The response class has the next methods,
 
 ```
-1. res.send_plain(*data*, *extra_headers*)      ->  sends plain text.
-2. res.send_json(*data*, *extra_headers*)       ->  sends json.
-3. res.send_html(*data*, *extra_headers*)       ->  sends html.
-4. res.send_css(*data*, *extra_headers*)        ->  sends css.
-5. res.send_javascript(*data*, *extra_headers*) ->  sends jsvascript.
-6. res.send_xml(*data*, *extra_headers*)        ->  sends xml.
-7. res.cors(*cors_flag*)                        ->  adds cors header flag.
+1. res.send_plain(*data*, *extra_headers*)              ->  sends plain text.
+2. res.send_json(*data*, *extra_headers*)               ->  sends json.
+3. res.send_html(*data*, *extra_headers*, *args*)       ->  sends html.
+4. res.send_css(*data*, *extra_headers*)                ->  sends css.
+5. res.send_javascript(*data*, *extra_headers*)         ->  sends jsvascript.
+6. res.send_xml(*data*, *extra_headers*)                ->  sends xml.
+7. res.cors(*cors_flag*)                                ->  adds cors header flag.
 ```
 
 All of the above methods can take extra headers. the headers **must** be an object. For example,
@@ -142,6 +143,33 @@ headers = {
     'Content-Type': 'text/css',
     'Server': 'ESP'
 }
+```
+
+### HTML Parameters
+
+One more thing to mention is that at `send_html` in the response, there is an **args** parameter. This **args** parameter passes parameters to your html code.
+In order to pass the parameters to the html code, there needs to be a `%name%` string in the html code. For example,
+```html
+<body>
+    <h1>%test%</h1>
+</body>
+```
+
+After adding the `%test%` string to the html simply pass a parameter to the `res.send_html()` like this,
+```python
+res.send_html('''
+    <body>
+        <h1>%test%</h1>
+    </body>
+''', test='your value')
+```
+
+The response will be the next,
+```
+Output: 
+    <body>
+        <h1>your value</h1>
+    </body>
 ```
 
 ### Paths and Redirects
