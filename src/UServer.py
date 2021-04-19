@@ -64,8 +64,10 @@ class UServer:
 
     @property
     def addr(self):
-        if(self.__host == '0.0.0.0'):
+        if(self.__host == '0.0.0.0' and network.WLAN(network.STA_IF).isconnected()):
             return network.WLAN(network.STA_IF).ifconfig()[0]
+        elif(network.WLAN(network.AP_IF).active()):
+            return network.WLAN(network.AP_IF).ifconfig()[0]
         return self.__host
 
     def __blocking_loop(self):
@@ -118,9 +120,12 @@ class UServer:
             print(e)
 
     def __start_listening(self):
-        addr = socket.getaddrinfo(self.__host, self.__port)[0][-1]
-        self.conn = socket.socket()
-        self.conn.bind(addr)
+        self.conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        if(network.WLAN(network.STA_IF).isconnected()):
+            addr = socket.getaddrinfo(self.__host, self.__port)[0][-1]
+            self.conn.bind(addr)
+        else:
+            self.conn.bind(('0.0.0.0', self.__port))
         self.conn.listen(1)
 
     def __run_callbacks(self, __request, __response, callbacks):

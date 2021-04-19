@@ -23,19 +23,19 @@
             fetch('%json_http_path%')
                 .then(response => response.json())
                 .then(objects => {
-                    for (const object in objects) {
+                    for (const index in objects) {
                         let desc = 'There is not a description made here. You can create by adding a description parameter on the @app.router().';
-                        if(object['description'] != '') desc = object['description'];
+                        if(objects[index]['description'] != '') desc = objects[index]['description'];
 
                         let bcolor = '#5762c5';
-                        if (object['method'] == 'POST' || object['method'] == 'PUT' || object['method'] == 'PATCH') bcolor = '#25B882';
-                        else if (object['method'] == 'DELETE') bcolor = '#DC5F5F'
+                        if (objects[index]['method'] == 'POST' || objects[index]['method'] == 'PUT' || objects[index]['method'] == 'PATCH') bcolor = '#25B882';
+                        else if (objects[index]['method'] == 'DELETE') bcolor = '#DC5F5F'
 
                         let codes = `There are no return codes.`;
-                        if(Object.keys(object['status_codes']).length !== 0) {
+                        if(Object.keys(objects[index]['status_codes']).length !== 0) {
                             codes = '';
-                            for (const code in object['status_codes']) {
-                                codes += '<span class="font-bold">' + code + '</span>' + ': ' + object['status_codes'][code];
+                            for (const code in objects[index]['status_codes']) {
+                                codes += '<span class="font-bold">' + code + '</span>' + ': ' + objects[index]['status_codes'][code];
                                 codes += '<br />'
                             }
                         }
@@ -43,8 +43,8 @@
                         cardHolder.innerHTML += `
                             <div class='col-lg-3  ml-1 mr-1 col-md-4 mt-20 rounded-xl shadow-md' style='background-color: ${bcolor};'>
                                 <div class='flex flex-nowrap mt-8 mb-3 ml-4 items-end text-gray-100'>
-                                    <h2 class='text-4xl'>${object['method']}</h2>
-                                    <p class='ml-3 text-md'>${object['path']}</p>
+                                    <h2 class='text-4xl'>${objects[index]['method']}</h2>
+                                    <p class='ml-3 text-md'>${objects[index]['path']}</p>
                                 </div>
                                 <div class='w-full mb-4' style='border-top: 3px solid #f3f3f3e7'></div>
                                 <p class='text-md text-gray-100 text-left ml-3 mb-4 w-11/12'>${desc}</p>
