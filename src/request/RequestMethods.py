@@ -1,5 +1,10 @@
 from helpers.RegexHelpers import uregex as re
 
+try:
+    import json
+except:
+    import ujson as json
+
 class RequestMethods:
     '''
         This class handles all of the predifined server HTTP Methods. It simply adds to the
@@ -18,6 +23,23 @@ class RequestMethods:
         if(path_validation != path):
             raise Exception('Invalid path name. Check your name again: ' + path)
         return re.findall(r'[/]([A-Za-z0-9_-]|[:]|[.]|[*])*', path)
+    
+    def __check_method_doc(self, description, return_codes, doc_str):
+        if(doc_str != None):
+            doc_no_new_lines = "".join(list(map(lambda line: line.strip(), doc_str.split('\n'))))
+            try:
+                if('description = ' in doc_no_new_lines and 'return_codes = ' in doc_no_new_lines):
+                    description, return_codes = doc_no_new_lines.split('return_codes = ')
+                    description = description.replace('description = ', '').strip()
+                    return_codes = json.loads(return_codes.replace('return_codes = ', '').strip())
+                elif('description = ' in doc_no_new_lines):
+                    description = doc_no_new_lines.split('description = ')[1]
+                elif('return_codes = ' in doc_no_new_lines):
+                    return_codes = doc_no_new_lines.split('return_codes = ')[1]
+                    return_codes = json.loads(return_codes)
+            except:
+                print("ValueError: Your method documentation is not correct: " + str(doc_str))
+        return description, return_codes
 
     def handle_methods(self, path, callback, method, redirects=[], description='', return_codes={}, reverse_stack=False):
         path = self.__path_validation(path)
@@ -41,6 +63,16 @@ class RequestMethods:
             res.send_content(path, content)
         self.handle_methods(path, [callback], 'GET')
 
+    def restful(self, path, class_args=(), middlewares=[], redirects=[], description="", return_codes={}):
+        def handler(RestObject):
+            __instance = RestObject()
+            for method in dir(__instance):
+                if(method.upper() in self.valid_methods):
+                    callback = getattr(__instance, method)
+                    n_description, n_return_codes = self.__check_method_doc(description, return_codes, callback.__doc__)
+                    self.handle_methods(path, middlewares + [callback], method.upper(), redirects, n_description, n_return_codes)
+        return handler
+
     def on(self, path, req_method, callback, middlewares=[], redirects=[], description='', return_codes={}, reverse_stack=False):
         if(req_method not in self.valid_methods):
             raise Exception('Invalid request type. You can only use:\n' + ", ".join(self.valid_methods) + '.')
@@ -48,30 +80,36 @@ class RequestMethods:
 
     def get(self, path, middlewares=[], redirects=[], description='', return_codes={}):
         def handler(callback):
-            self.handle_methods(path, middlewares + [callback], 'GET', redirects, description, return_codes)
+            n_description, n_return_codes = self.__check_method_doc(description, return_codes, callback.__doc__)
+            self.handle_methods(path, middlewares + [callback], 'GET', redirects, n_description, n_return_codes)
         return handler
 
     def post(self, path, middlewares=[], redirects=[], description='', return_codes={}):
         def handler(callback):
-            self.handle_methods(path, middlewares + [callback], 'POST', redirects, description, return_codes)
+            n_description, n_return_codes = self.__check_method_doc(description, return_codes, callback.__doc__)
+            self.handle_methods(path, middlewares + [callback], 'POST', redirects, n_description, n_return_codes)
         return handler
 
     def patch(self, path, middlewares=[], redirects=[], description='', return_codes={}):
         def handler(callback):
-            self.handle_methods(path, middlewares + [callback], 'PATCH', redirects, description, return_codes)
+            n_description, n_return_codes = self.__check_method_doc(description, return_codes, callback.__doc__)
+            self.handle_methods(path, middlewares + [callback], 'PATCH', redirects, n_description, n_return_codes)
         return handler
 
     def put(self, path, middlewares=[], redirects=[], description='', return_codes={}):
         def handler(callback):
-            self.handle_methods(path, middlewares + [callback], 'PUT', redirects, description, return_codes)
+            n_description, n_return_codes = self.__check_method_doc(description, return_codes, callback.__doc__)
+            self.handle_methods(path, middlewares + [callback], 'PUT', redirects, n_description, n_return_codes)
         return handler
 
     def delete(self, path, middlewares=[], redirects=[], description='', return_codes={}):
         def handler(callback):
-            self.handle_methods(path, middlewares + [callback], 'DELETE', redirects, description, return_codes)
+            n_description, n_return_codes = self.__check_method_doc(description, return_codes, callback.__doc__)
+            self.handle_methods(path, middlewares + [callback], 'DELETE', redirects, n_description, n_return_codes)
         return handler
 
     def options(self, path, middlewares=[], redirects=[], description='', return_codes={}):
         def handler(callback):
-            self.handle_methods(path, middlewares + [callback], 'OPTIONS', redirects, description, return_codes)
+            n_description, n_return_codes = self.__check_method_doc(description, return_codes, callback.__doc__)
+            self.handle_methods(path, middlewares + [callback], 'OPTIONS', redirects, n_description, n_return_codes)
         return handler

@@ -1,4 +1,4 @@
-# UServer ![micropytho](https://img.shields.io/badge/micropython-blue) ![version](https://img.shields.io/badge/version-1.0.2-brightengreen)
+# UServer ![micropytho](https://img.shields.io/badge/micropython-blue) ![version](https://img.shields.io/badge/version-1.1.0-brightengreen)
 
 *This is a micropython HTTP web application server repository.*
 
