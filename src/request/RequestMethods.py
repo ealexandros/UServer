@@ -31,6 +31,8 @@ class RequestMethods:
                 if('description: ' in doc_no_new_lines and 'return_codes: ' in doc_no_new_lines):
                     description, return_codes = doc_no_new_lines.split('return_codes: ')
                     description = description.replace('description: ', '').strip()
+                    if(description[0] == '{' and return_codes[0] != '{'):
+                        description, return_codes = return_codes, description
                     return_codes = json.loads(return_codes.replace('return_codes: ', '').strip())
                 elif('description: ' in doc_no_new_lines):
                     description = doc_no_new_lines.split('description: ')[1]
@@ -63,53 +65,54 @@ class RequestMethods:
             res.send_content(path, content)
         self.handle_methods(path, [callback], 'GET')
 
-    def restful(self, path, class_args=(), middlewares=[], redirects=[], description="", return_codes={}):
+    def restful(self, path, class_args=(), middlewares=[], redirects=[], description="", docs="", return_codes={}):
         def handler(RestObject):
             __instance = RestObject()
+            n_description, n_return_codes = self.__check_method_doc(description, return_codes, docs)
             for method in dir(__instance):
                 if(method.upper() in self.valid_methods):
                     callback = getattr(__instance, method)
-                    n_description, n_return_codes = self.__check_method_doc(description, return_codes, callback.__doc__)
                     self.handle_methods(path, middlewares + [callback], method.upper(), redirects, n_description, n_return_codes)
         return handler
 
-    def on(self, path, req_method, callback, middlewares=[], redirects=[], description='', return_codes={}, reverse_stack=False):
+    def on(self, path, req_method, callback, middlewares=[], redirects=[], description='', return_codes={}, docs="", reverse_stack=False):
         if(req_method not in self.valid_methods):
             raise Exception('Invalid request type. You can only use:\n' + ", ".join(self.valid_methods) + '.')
-        self.handle_methods(path, middlewares + [callback], req_method, redirects, description, return_codes, reverse_stack)
+        n_description, n_return_codes = self.__check_method_doc(description, return_codes, docs)
+        self.handle_methods(path, middlewares + [callback], req_method, redirects, n_description, n_return_codes, reverse_stack)
 
-    def get(self, path, middlewares=[], redirects=[], description='', return_codes={}):
+    def get(self, path, middlewares=[], redirects=[], description='', return_codes={}, docs=""):
         def handler(callback):
-            n_description, n_return_codes = self.__check_method_doc(description, return_codes, callback.__doc__)
+            n_description, n_return_codes = self.__check_method_doc(description, return_codes, docs)
             self.handle_methods(path, middlewares + [callback], 'GET', redirects, n_description, n_return_codes)
         return handler
 
-    def post(self, path, middlewares=[], redirects=[], description='', return_codes={}):
+    def post(self, path, middlewares=[], redirects=[], description='', return_codes={}, docs=""):
         def handler(callback):
-            n_description, n_return_codes = self.__check_method_doc(description, return_codes, callback.__doc__)
+            n_description, n_return_codes = self.__check_method_doc(description, return_codes, docs)
             self.handle_methods(path, middlewares + [callback], 'POST', redirects, n_description, n_return_codes)
         return handler
 
-    def patch(self, path, middlewares=[], redirects=[], description='', return_codes={}):
+    def patch(self, path, middlewares=[], redirects=[], description='', return_codes={}, docs=""):
         def handler(callback):
-            n_description, n_return_codes = self.__check_method_doc(description, return_codes, callback.__doc__)
+            n_description, n_return_codes = self.__check_method_doc(description, return_codes, docs)
             self.handle_methods(path, middlewares + [callback], 'PATCH', redirects, n_description, n_return_codes)
         return handler
 
-    def put(self, path, middlewares=[], redirects=[], description='', return_codes={}):
+    def put(self, path, middlewares=[], redirects=[], description='', return_codes={}, docs=""):
         def handler(callback):
-            n_description, n_return_codes = self.__check_method_doc(description, return_codes, callback.__doc__)
+            n_description, n_return_codes = self.__check_method_doc(description, return_codes, docs)
             self.handle_methods(path, middlewares + [callback], 'PUT', redirects, n_description, n_return_codes)
         return handler
 
-    def delete(self, path, middlewares=[], redirects=[], description='', return_codes={}):
+    def delete(self, path, middlewares=[], redirects=[], description='', return_codes={}, docs=""):
         def handler(callback):
-            n_description, n_return_codes = self.__check_method_doc(description, return_codes, callback.__doc__)
+            n_description, n_return_codes = self.__check_method_doc(description, return_codes, docs)
             self.handle_methods(path, middlewares + [callback], 'DELETE', redirects, n_description, n_return_codes)
         return handler
 
-    def options(self, path, middlewares=[], redirects=[], description='', return_codes={}):
+    def options(self, path, middlewares=[], redirects=[], description='', return_codes={}, docs=""):
         def handler(callback):
-            n_description, n_return_codes = self.__check_method_doc(description, return_codes, callback.__doc__)
+            n_description, n_return_codes = self.__check_method_doc(description, return_codes, docs)
             self.handle_methods(path, middlewares + [callback], 'OPTIONS', redirects, n_description, n_return_codes)
         return handler

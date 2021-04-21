@@ -333,7 +333,7 @@ The `POST` path will be added to the documentation. If you would like to add a d
 ```python
 @app.router.post('/person', middlewares=[EnableCors],
     description="You can create a new person by creating a json file with the `username`, `fnmae`, `password` and the `email`",
-    status_codes={
+    return_codes={
         '200': 'person created',
         '404': 'json does not contain all the necessary fields',
         '409': 'person exist need to change email or password'
@@ -352,35 +352,35 @@ Simply add two extra parameters on the decorator function. (description, status_
 
 For the second method you can simply write the documentation like the go below,
 ```python
-@app.router.delete('/person/:id')
-def delete_person(req, res):
+@app.router.delete('/person/:id', docs=
     '''
         description: ... 
         ...
         ...
 
-        status_codes: {
+        return_codes: {
             "200": "person deleted",
             "400": "not authorized"
         }
-    '''
+    ''')
+def delete_person(req, res):
     url_id = req.get_url('id')
     res.send_json({ 'id': url_id })
 ```
 
-As you can see you have to add a documentation string to your method. First you need to add the description and afterwards the status_codes. The description can be a string on multiple lines. The status_code on the other hand must be in `json` format. It must consist of `"` and `,` after every entry. You can take a better look [here](https://en.wikipedia.org/wiki/JSON).
+As you can see you have to add a `docs` parameter to the methods decorator. First you need to add the description and afterwards the return_codes. The description can be a string on multiple lines. The status_code on the other hand must be in `json` format. It must consist of `"` and `,` after every entry. You can take a better look [here](https://en.wikipedia.org/wiki/JSON).
 
 #### Method Conflict
 
 If both methods are implemented, the second method will override the first method. For example if we have something like this,
 ```python
-@app.router.delete('/person/:id', description=".", status_codes={ '100': 'this will not show' })
-def delete_person(req, res):
+@app.router.delete('/person/:id', description=".", return_codes={ '100': 'this will not show' }, docs=
     '''
         description: ...
 
-        status_codes: { "200": "person deleted" }
-    '''
+        return_codes: { "200": "person deleted" }
+    ''')
+def delete_person(req, res):
     url_id = req.get_url('id')
     res.send_json({ 'id': url_id })
 
@@ -389,7 +389,7 @@ def delete_person(req, res):
 The auto documentation will select the,
 ```
 description = ...
-status_codes = { "200": "person deleted" }
+return_codes = { "200": "person deleted" }
 ```
 
 ### Documentation Path
