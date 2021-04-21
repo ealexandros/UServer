@@ -10,4 +10,4 @@ if %1==-e echo Adding ../example
 if %1==-e ampy -p %2 put ..\example /
 
 if %1==-l echo Adding ../src
-if %2==-l ampy -p %2 put ..\src /lib/
+if %1==-l ampy -p %2 put ..\src /lib/

@@ -446,7 +446,7 @@ def delete_person(req, res):
 
 That is not a but implementation but there is a more simple one. You can use the `@app.router.restful(*path*)` method which comes with the `userver` package. In the previous example we can write it now like this,
 ```python
-@app.router.restful('user')
+@app.router.restful('/user')
 class User:
     def get(self, req, res):
         # ..Business Logic.. #
