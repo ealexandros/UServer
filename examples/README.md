@@ -1,4 +1,4 @@
-# Documentation ![version](https://img.shields.io/badge/version-1.0.2-brightengreen)
+# Documentation ![version](https://img.shields.io/badge/version-1.1.0-brightengreen)
 
 In **README.md** file you wil find the complete documentation of the `UServer` repository. This file may be chnaged over the time, because more functionality will be added to the project.
 
@@ -26,6 +26,9 @@ So lets start!
     - [Middleware Queue](#middleware-queue)
 - [Documentation](#-documentationpy)
     - [Default Documentation](#default-documentation)
+        - [Method 1](#method-1)
+        - [Method 2](#method-2)
+        - [Method Conflict](#method-conflict)
     - [Documentation Path](#documentation-path)
     - [JSON Documentation](#json-documentation)
 - [Conclusion](#-conclusion)
@@ -324,6 +327,8 @@ def create_(req, res):
     pass
 ```
 
+#### Method 1
+
 The `POST` path will be added to the documentation. If you would like to add a description to that path and the response codes that may be returned you can do it like this,
 ```python
 @app.router.post('/person', middlewares=[EnableCors],
@@ -342,6 +347,50 @@ Simply add two extra parameters on the decorator function. (description, status_
 
 1. The **description** must be a string type parameter.
 2. The **status_code**, must be an object type parameter.
+
+#### Method 2
+
+For the second method you can simply write the documentation like the go below,
+```python
+@app.router.delete('/person/:id')
+def delete_person(req, res):
+    '''
+        description: ... 
+        ...
+        ...
+
+        status_codes: {
+            "200": "person deleted",
+            "400": "not authorized"
+        }
+    '''
+    url_id = req.get_url('id')
+    res.send_json({ 'id': url_id })
+```
+
+As you can see you have to add a documentation string to your method. First you need to add the description and afterwards the status_codes. The description can be a string on multiple lines. The status_code on the other hand must be in `json` format. It must consist of `"` and `,` after every entry. You can take a better look [here](https://en.wikipedia.org/wiki/JSON).
+
+#### Method Conflict
+
+If both methods are implemented, the second method will override the first method. For example if we have something like this,
+```python
+@app.router.delete('/person/:id', description=".", status_codes={ '100': 'this will not show' })
+def delete_person(req, res):
+    '''
+        description: ...
+
+        status_codes: { "200": "person deleted" }
+    '''
+    url_id = req.get_url('id')
+    res.send_json({ 'id': url_id })
+
+```
+
+The auto documentation will select the,
+```
+description = ...
+status_codes = { "200": "person deleted" }
+```
 
 ### Documentation Path
 

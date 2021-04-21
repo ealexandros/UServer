@@ -27,4 +27,20 @@ def create_person(req, res):
         'username': username,
         'password': password })
 
+
+@app.router.delete('/person/:id')
+def delete_person(req, res):
+    '''
+        description: You can delete a person by providing only
+        his id.
+
+        status_codes: {
+            "200": "person deleted",
+            "400": "not authorized",
+            "404": "person not found"
+        }
+    '''
+    url_id = req.get_url('id')
+    res.send_json({ 'id': url_id })
+
 app.start(block=True, logger=True, doc_path='/v1/docs')

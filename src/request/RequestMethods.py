@@ -28,14 +28,14 @@ class RequestMethods:
         if(doc_str != None):
             doc_no_new_lines = "".join(list(map(lambda line: line.strip(), doc_str.split('\n'))))
             try:
-                if('description = ' in doc_no_new_lines and 'return_codes = ' in doc_no_new_lines):
-                    description, return_codes = doc_no_new_lines.split('return_codes = ')
-                    description = description.replace('description = ', '').strip()
-                    return_codes = json.loads(return_codes.replace('return_codes = ', '').strip())
-                elif('description = ' in doc_no_new_lines):
-                    description = doc_no_new_lines.split('description = ')[1]
-                elif('return_codes = ' in doc_no_new_lines):
-                    return_codes = doc_no_new_lines.split('return_codes = ')[1]
+                if('description: ' in doc_no_new_lines and 'return_codes: ' in doc_no_new_lines):
+                    description, return_codes = doc_no_new_lines.split('return_codes: ')
+                    description = description.replace('description: ', '').strip()
+                    return_codes = json.loads(return_codes.replace('return_codes: ', '').strip())
+                elif('description: ' in doc_no_new_lines):
+                    description = doc_no_new_lines.split('description: ')[1]
+                elif('return_codes: ' in doc_no_new_lines):
+                    return_codes = doc_no_new_lines.split('return_codes: ')[1]
                     return_codes = json.loads(return_codes)
             except:
                 print("ValueError: Your method documentation is not correct: " + str(doc_str))
