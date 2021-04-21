@@ -31,6 +31,9 @@ So lets start!
         - [Method Conflict](#method-conflict)
     - [Documentation Path](#documentation-path)
     - [JSON Documentation](#json-documentation)
+- [Restful](#-restful.py)
+    - [Basic Structure](#basic-structure)
+    - [Class Parameters](#class-parameters)
 - [Conclusion](#-conclusion)
 
 ## ▶ Boot.py
@@ -416,6 +419,78 @@ One more thing to mention is that after the path of the documentation (by defaul
 http://xxx.xxx.xxx.xxx:port/docs        ->  default auto documentation html
 http://xxx.xxx.xxx.xxx:port/docs/json   ->  default auto documentation json
 ```
+
+## Restful.py
+
+For a better understanding of the auto-documentation in the userver package you can see the [restful.py](https://github.com/alexandros44/UServer/blob/main/examples/restful.py) file. Lets see how everything works.
+
+### Basic Structure
+
+Until now if you would like to add to your `http://localhost:3000/user` url the methods `GET`, `POST` and the `DELETE` you would have to do it like this,
+```python
+@app.router.get('/user')
+def get_person(req, res):
+    # ..Business Logic.. #
+    res.send()
+
+@app.router.post('/user')
+def create_person(req, res):
+    # ..Business Logic.. #
+    res.send()
+
+@app.router.delete('/user')
+def delete_person(req, res):
+    # ..Business Logic.. #
+    res.send()
+```
+
+That is not a but implementation but there is a more simple one. You can use the `@app.router.restful(*path*)` method which comes with the `userver` package. In the previous example we can write it now like this,
+```python
+@app.router.restful('user')
+class User:
+    def get(self, req, res):
+        # ..Business Logic.. #
+        res.send()
+        
+    def post(self, req, res):
+        # ..Business Logic.. #
+        res.send()
+
+    def delete(self, req, res):
+        # ..Business Logic.. #
+        res.send()
+```
+
+The `@app.router.restful` takes the same parameters as the `app.router.*` methods.
+
+### Class Parameters
+
+If we want the `User` class to have a constructor with parameters, for example,
+```python
+@app.router.restful('user')
+class User:
+    def __init__(self, param):
+        self.param = param
+
+    def get(self, req, res):
+        # ..Business Logic.. #
+        res.send()
+```
+
+There is a special parameter in the `@app.router.restful()` decorator which takes as an input a tuple. The parameter `class_args=`. The above example would throw an `Exception` because the class expects an argument. The correct way would be,
+```python
+
+@app.router.restful('user', class_args=('100'))
+class User:
+    def __init__(self, param):
+        self.param = param
+
+    def get(self, req, res):
+        # ..Business Logic.. #
+        res.send(self.param)
+```
+
+Afterwards this parameter `self.param` can be used inside the `get` method.
 
 ## ✨ Conclusion
 
