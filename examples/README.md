@@ -420,7 +420,7 @@ http://xxx.xxx.xxx.xxx:port/docs        ->  default auto documentation html
 http://xxx.xxx.xxx.xxx:port/docs/json   ->  default auto documentation json
 ```
 
-## Restful.py
+## 💫 Restful.py
 
 For a better understanding of the auto-documentation in the userver package you can see the [restful.py](https://github.com/alexandros44/UServer/blob/main/examples/restful.py) file. Lets see how everything works.
 
