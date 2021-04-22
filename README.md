@@ -57,7 +57,7 @@ After cloning the repository you need to type the following command:
 .\Userver\helpers> ./flash -l *communicaiton_port*
 ```
 
-Where the communication port is the port in which your microcontroller is connected.
+The `communication_port` is the port in which your microcontroller is connected.
 
 **P.S**: First make sure that you downloaded all the necessary tools. (Check the [requirements](#-requirements) for more)
 

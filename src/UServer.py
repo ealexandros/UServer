@@ -179,7 +179,7 @@ class UServer:
                     __request = Request(http_request_list, addr)
                     if(self.logger.active):
                         self.logger.action(__request)
-                    __response = Response(client)
+                    __response = Response(client, __request.request_method)
                     self.__router(__request, __response)
                 else:
                     client.close()

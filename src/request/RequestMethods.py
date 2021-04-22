@@ -14,7 +14,7 @@ class RequestMethods:
     '''
     def __init__(self, userver):
         self.__userver = userver
-        self.valid_methods = ["GET", "POST", "PUT", "PATCH", "OPTIONS", "DELETE"]
+        self.valid_methods = ["GET", "POST", "PUT", "PATCH", "HEAD", "DELETE"]
 
     def __path_validation(self, path):
         if(path == '*'): return ['*']
@@ -111,8 +111,8 @@ class RequestMethods:
             self.handle_methods(path, middlewares + [callback], 'DELETE', redirects, n_description, n_return_codes)
         return handler
 
-    def options(self, path, middlewares=[], redirects=[], description='', return_codes={}, docs=""):
+    def head(self, path, middlewares=[], redirects=[], description='', return_codes={}, docs=""):
         def handler(callback):
             n_description, n_return_codes = self.__check_method_doc(description, return_codes, docs)
-            self.handle_methods(path, middlewares + [callback], 'OPTIONS', redirects, n_description, n_return_codes)
+            self.handle_methods(path, middlewares + [callback], 'HEAD', redirects, n_description, n_return_codes)
         return handler

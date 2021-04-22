@@ -20,7 +20,7 @@ HTTP_STATUS_CODES = {
     "305": "Use Proxy",
     "306": "Switch Proxy",
     "307": "Temporary Redirect",
-    "308": "PermanentRedirect",
+    "308": "Permanent Redirect",
     "400": "Bad Request",
     "401": "Unauthorized",
     "402": "Payment Required",

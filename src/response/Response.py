@@ -12,7 +12,8 @@ class Response:
 
         :client:    This is a socket connection.
     '''
-    def __init__(self, client):
+    def __init__(self, client, request_method):
+        self.__request_method = request_method
         self.HTTP_VERSION = "HTTP/1.1"
 
         self.__client = client
@@ -41,7 +42,7 @@ class Response:
             for key in headers:
                 http_builder += "{}: {}\r\n".format(key, headers[key])
 
-        if(data != ""):
+        if(data != "" and self.__request_method != 'HEAD'):
             http_builder += "Content-Type: {}\r\n".format(content_type)
             http_builder += "\r\n{}".format(data)
         else:

@@ -13,7 +13,7 @@ class Request:
         self.__addr_ip = addr[0]
         self.__addr_port = addr[1]
 
-        self.__request_type = None
+        self.__request_method = None
         self.__http_path = None
         self.__http_path_list = None
         self.__http_version = None
@@ -27,8 +27,8 @@ class Request:
         self.__parse_request()
 
     def __parse_request(self):
-        self.__request_type = re.findall(r'[A-Z]+', self.__request[0])[0]
-        self.__http_path = self.__request[0].replace(self.__request_type, '').strip().split(' ')[0]
+        self.__request_method = re.findall(r'[A-Z]+', self.__request[0])[0]
+        self.__http_path = self.__request[0].replace(self.__request_method, '').strip().split(' ')[0]
         self.__http_path_list = list(map(lambda x: '/' + x, self.__http_path.split('/')[1:]))
         self.__http_version = re.findall(r'(HTTP[/][0-9.]*|HTTPS[/][0-9.]*)', self.__request[0])[0]
 
@@ -51,7 +51,7 @@ class Request:
 
     @property
     def method(self):
-        return self.__request_type
+        return self.__request_method
 
     @property
     def path(self):

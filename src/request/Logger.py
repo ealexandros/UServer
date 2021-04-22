@@ -2,7 +2,7 @@ from helpers.TerminalColors import tcolors
 
 class Logger:
     '''
-        Logs every request that cames throw it. In order for the logger to work, a parameter (logger) in the
+        Logs every request that comes. In order for the logger to work, a parameter (logger) in the
         app.start() must be set to True.
     '''
     def __init__(self):

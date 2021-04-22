@@ -81,7 +81,7 @@ Create different routes. More specifically you can use the,
 @app.router.delete(*path*)
 @app.router.put(*path*)
 @app.router.patch(*path*)
-@app.router.options(*path*)
+@app.router.head(*path*)
 ```
 
 ### Functions
