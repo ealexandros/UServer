@@ -31,7 +31,7 @@ So lets start!
         - [Method Conflict](#method-conflict)
     - [Documentation Path](#documentation-path)
     - [JSON Documentation](#json-documentation)
-- [Restful](#-restful.py)
+- [Restful](#-restfulpy)
     - [Basic Structure](#basic-structure)
     - [Class Parameters](#class-parameters)
 - [Conclusion](#-conclusion)
