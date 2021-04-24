@@ -133,13 +133,13 @@ The response class has the next properties,
 The response class has the next methods,
 
 ```
-1. res.send_plain(*data*, *extra_headers*)              ->  sends plain text.
-2. res.send_json(*data*, *extra_headers*)               ->  sends json.
-3. res.send_html(*data*, *extra_headers*, *args*)       ->  sends html.
-4. res.send_css(*data*, *extra_headers*)                ->  sends css.
-5. res.send_javascript(*data*, *extra_headers*)         ->  sends jsvascript.
-6. res.send_xml(*data*, *extra_headers*)                ->  sends xml.
-7. res.cors(*cors_flag*)                                ->  adds cors header flag.
+1. res.send_plain(*data*, *extra_headers*)                       ->  sends plain text.
+2. res.send_json(*data*, *extra_headers*)                        ->  sends json.
+3. res.send_html(*data*, *extra_headers*, *path*, *args*)        ->  sends html.
+4. res.send_css(*data*, *extra_headers*, *path*, *args*)         ->  sends css.
+5. res.send_javascript(*data*, *extra_headers*, *path*, *args*)  ->  sends jsvascript.
+6. res.send_xml(*data*, *extra_headers*)                         ->  sends xml.
+7. res.cors(*cors_flag*)                                         ->  adds cors header flag.
 ```
 
 All of the above methods can take extra headers. the headers **must** be an object. For example,
@@ -151,9 +151,14 @@ headers = {
 }
 ```
 
+In the `res.send_html`, `res.send_css` and `res.send_javascript` methods there is a parameter called *path*. The path parameter is set by default to `False`, if it is set to `True` then instead of passing the html, css or javascript file pass the path to the file and it will automatically open the file. For example,
+```python
+res.send_html('/path/to/index.html', path=True)
+```
+
 ### HTML Parameters
 
-One more thing to mention is that at `send_html` in the response, there is an **args** parameter. This **args** parameter passes parameters to your html code.
+One more thing to mention is that at `send_html`, `send_css` and `send_javascript` in the response, there is an **args** parameter. This **args** parameter passes parameters to your html code.
 In order to pass the parameters to the html code, there needs to be a `%name%` string in the html code. For example,
 ```html
 <body>

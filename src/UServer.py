@@ -14,9 +14,9 @@ from helpers.OSPath import upath
 from docs.UDocs import UDocs
 
 try:
-    import usocket as socket
-except:
     import socket
+except:
+    import usocket as socket
 
 try:
     import threading

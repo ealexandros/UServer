@@ -7,9 +7,9 @@ class BadRespond:
     '''
     def __init__(self, response, request):
         self.responseObject = response
-        self.responseObject.status = 500
-
         self.requestObject = request
+
+        self.responseObject.status = 500
 
         self.bad_request_html = '''
             <!DOCTYPE html>
@@ -28,7 +28,12 @@ class BadRespond:
 
     def send(self):
         accept_type = self.requestObject.header('Accept')
-        if(accept_type == None):
-            self.responseObject.send('{} not supported on {} path.'.format(self.requestObject.method, self.requestObject.path))
-        elif('text/html' in accept_type or '*/*' in accept_type):
-            self.responseObject.send_html(self.bad_request_html)
+        if(accept_type != None):
+            if(accept_type == 'text/html' or accept_type == '*/*'):
+                self.responseObject.send_html(self.bad_request_html)
+            elif(accept_type == 'application/json'):
+                self.responseObject.send_json({ 'error': '{} not supported on {} path.'.format(self.requestObject.method, self.requestObject.path)})
+            else:
+                self.responseObject.send('{} not supported on {} path.'.format(self.requestObject.method, self.requestObject.path))
+        else:
+            self.responseObject.send()

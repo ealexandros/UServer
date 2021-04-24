@@ -52,6 +52,15 @@ class Response:
         self.__client.send(byte_data)
         self.close()
 
+    def __template_processing(self, template, path, params):
+        if(path):
+            with open(template, 'r') as fil:
+                template = fil.read()
+
+        for key in params:
+            template = template.replace('%{}%'.format(key), params[key])
+        return template
+
     def send_plain(self, data, headers={}):
         self.send(data, 'text/plain', headers)
 
@@ -59,16 +68,17 @@ class Response:
         data_to_json = json.dumps(data)
         self.send(data_to_json, 'application/json', headers)
 
-    def send_html(self, data, headers={}, **args):
-        for key in args:
-            data = data.replace('%{}%'.format(key), args[key])
-        self.send(data, 'text/html', headers)
+    def send_html(self, data, path=False, headers={}, **params):
+        template = self.__template_processing(data, path, params)
+        self.send(template, 'text/html', headers)
 
-    def send_css(self, data, headers={}):
-        self.send(data, 'text/css', headers)
+    def send_css(self, data, path=False, headers={}, **params):
+        template = self.__template_processing(data, path, params)
+        self.send(template, 'text/css', headers)
 
-    def send_javascript(self, data, headers={}):
-        self.send(data, 'text/javascript', headers)
+    def send_javascript(self, data, path=False, headers={}, **params):
+        template = self.__template_processing(data, path, params)
+        self.send(template, 'text/javascript', headers)
 
     def send_xml(self, data, headers={}):
         self.send(data, 'application/xml', headers)
