@@ -62,7 +62,7 @@ class RequestMethods:
 
     def static_content(self, path, content):
         def callback(req, res):
-            res.send_content(path, content)
+            res.send_file_content(path, content)
         self.handle_methods(path, [callback], 'GET')
 
     def restful(self, path, class_args=(), middlewares=[], redirects=[], description="", docs="", return_codes={}):

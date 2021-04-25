@@ -62,7 +62,7 @@ class Response:
         return template
 
     def send_plain(self, data, headers={}):
-        self.send(data, 'text/plain', headers)
+        self.send(str(data), 'text/plain', headers)
 
     def send_json(self, data, headers={}):
         data_to_json = json.dumps(data)
@@ -83,7 +83,7 @@ class Response:
     def send_xml(self, data, headers={}):
         self.send(data, 'application/xml', headers)
 
-    def send_content(self, path, data):
+    def send_file_content(self, path, data):
         extention = '.'.join(path.split('.')[1:])
         if(extention == 'html'):
             self.send_html(data)
