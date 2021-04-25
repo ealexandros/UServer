@@ -42,8 +42,9 @@ class Request:
             if(header == '\r\n' or header == '\n'):
                 break
             elif(':' in header):
-                header_split = re.one_cut_split(r'[:]', header)
-                self.__headers[header_split[0].strip()] =  header_split[1].strip()
+                header_key = header.split(':')[0]
+                header_value = ':'.join(header.split(':')[1:])
+                self.__headers[header_key.strip()] = header_value.strip()
 
         if('Content-Length' in self.__headers and int(self.__headers['Content-Length']) > 0):
             raw_body = self.__request[-1].strip()
