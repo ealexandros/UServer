@@ -151,7 +151,7 @@ headers = {
 }
 ```
 
-In the `res.send_html`, `res.send_css` and `res.send_javascript` methods there is a parameter called *path*. The path parameter is set by default to `False`, if it is set to `True` then instead of passing the html, css or javascript file pass the path to the file and it will automatically open the file. For example,
+In the `res.send_html`, `res.send_css` and `res.send_javascript` methods there is a parameter called *path*. The path parameter is set by default to `False`, if it is set to `True` then instead of passing the html, css or javascript file directly, pass the path to the file and it will automatically open the file. For example,
 ```python
 res.send_html('/path/to/index.html', path=True)
 ```

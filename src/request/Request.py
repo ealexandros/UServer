@@ -29,6 +29,12 @@ class Request:
     def __parse_request(self):
         self.__request_method = re.findall(r'[A-Z]+', self.__request[0])[0]
         self.__http_path = self.__request[0].replace(self.__request_method, '').strip().split(' ')[0]
+
+        if('?' in self.__http_path):
+            raw_params = re.findall(r"[?][A-Za-z0-9=_+!@#$&]+", self.__request[0])[0][1:]
+            self.__params = BodyParser(raw_params)._get_parse_object('params')
+            self.__http_path = re.one_cut_split('[?]', self.__http_path)[0]
+
         self.__http_path_list = list(map(lambda x: '/' + x, self.__http_path.split('/')[1:]))
         self.__http_version = re.findall(r'(HTTP[/][0-9.]*|HTTPS[/][0-9.]*)', self.__request[0])[0]
 
@@ -44,10 +50,6 @@ class Request:
             if('Content-Type' in self.__headers):
                 self.__content_type = self.__headers['Content-Type']
             self.__body = BodyParser(raw_body)._get_parse_object(self.__content_type)
-
-        if('?' in self.__request[0]):
-            raw_params = re.findall(r"[?][A-Za-z0-9=_+!@#$&]+", self.__request[0])[0][1:]
-            self.__params = BodyParser(raw_params)._get_parse_object('params')
 
     @property
     def method(self):
