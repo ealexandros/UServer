@@ -47,18 +47,23 @@ class RequestMethods:
         path = self.__path_validation(path)
         redirects = list(map(lambda path: self.__path_validation(path), redirects))
 
-        self.__userver.router_paths.append({
-            'path': path,
-            'callback': callback,
-            'method': method,
-            'redirects': redirects,
-            'description': description,
-            'return_codes': return_codes,
-        })
+        duplicate_routes = list(filter(lambda route: route['path'] == path and route['method'] == method, self.__userver.router_paths))
+        if(not duplicate_routes):
+            self.__userver.router_paths.append({
+                'path': path,
+                'callback': callback,
+                'method': method,
+                'redirects': redirects,
+                'description': description,
+                'return_codes': return_codes,
+            })
 
-        if(reverse_stack):
-            last_route = self.__userver.router_paths.pop()
-            self.__userver.router_paths.insert(0, last_route)
+            if(reverse_stack):
+                last_route = self.__userver.router_paths.pop()
+                self.__userver.router_paths.insert(0, last_route)
+        else:
+            print("LogicError: The path to the {} with the method {} already exists".format("".join(path), method))
+
 
     def static_content(self, path, content):
         def callback(req, res):

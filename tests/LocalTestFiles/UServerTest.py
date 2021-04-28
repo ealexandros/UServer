@@ -91,7 +91,7 @@ class UServer:
 
             self.__start_listening()
             # threading.start_new_thread(self.__handle_server, ())
-            threading.Thread(target=self.__handle_server, daemon=True)
+            threading.Thread(target=self.__handle_server, daemon=True).start()
 
             if(function):
                 return handler
@@ -122,7 +122,7 @@ class UServer:
             print(e)
 
     def __start_listening(self):
-        # self.conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         # if(network.WLAN(network.STA_IF).isconnected()):
         addr = socket.getaddrinfo(self.__host, self.__port)[0][-1]
         self.conn.bind(addr)

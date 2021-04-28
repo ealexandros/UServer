@@ -44,13 +44,14 @@ This will override the hole file. Make sure you have a copy of `UServer`.
 
 ## ✅ Already Tested
 
-| Files                     | Description   |
-| ------------------------- |---------------------|
-| BasicRequestsTests        | Tested the basic functionality of the application. |
-| BodyParamsTests           | Tested the request body and the request parameters of the client. |
-| MultiPathRequestsTests    | Tested the star **\*** path and some variations with the url parameters. |
-| RequestVariableTests      | Tested the request class variables. |
-| ResponseBodyTypesTests    | Tested all the different response body types. |
+| Files                     | Description                                                                |
+| ------------------------- |----------------------------------------------------------------------------|
+| BasicRequestsTests        | Tested the basic functionality of the application.                         |
+| BodyParamsTests           | Tested the request body and the request parameters of the client.          |
+| MultiPathRequestsTests    | Tested the star **\*** path and some variations with the url parameters.   |
+| RequestVariableTests      | Tested the request class variables.                                        |
+| ResponseBodyTypesTests    | Tested all the different response body types.                              |
+| AutoDocumentationTests    | Tested all the different auto documentation types.                         |
 
 ## ✨ Conclusion
 
