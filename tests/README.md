@@ -6,8 +6,8 @@
 
 - [Description](#-description)
 - [Setup](#-setup)
-    -[Step 1](#step-1)
-    -[Step 2](#step-2)
+    - [Step 1](#step-1)
+    - [Step 2](#step-2)
 - [Already Tested](#-already-tested)
 - [Conclusion](#-conclusion)
 
