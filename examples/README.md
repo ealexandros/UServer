@@ -24,6 +24,10 @@ So lets start!
     - [Middleware Setup](#middleware-setup)
     - [Error Overriding](#error-overriding)
     - [Middleware Queue](#middleware-queue)
+- [Static](#-staticpy)
+    - [Basic Setup](#basic-setup)
+    - [Static Example](#static-example)
+    - [Static Paths](#static-paths)
 - [Documentation](#-documentationpy)
     - [Default Documentation](#default-documentation)
         - [Method 1](#method-1)
@@ -321,6 +325,56 @@ The first middleware that will be executed will be the middleware on the zero in
 BodyParser -> ParamValidation -> intercept -> create_person
 ```
 
+## 🗄 Static.py
+
+For a better understanding of the auto-documentation in the userver package you can see the [static.py](https://github.com/alexandros44/UServer/blob/main/examples/static.py) file. Lets see how everything works.
+
+### Basic Setup
+
+The package comes with a function called `static`. This function publishes all your static html/css, javascript, images etc inside your specified folder. In order for it to work this must be executed,
+```python
+app.static("folder_path")
+```
+
+The `folder_path` must be the absolute path to the folder.
+
+### Static Example
+
+If you have a subfolder in your project like this,
+```
+./YourProject
+├── static/
+│   ├── style/
+│   │   └── style.css
+│   ├── js/
+│   │   └── index.js
+│   ├── index.html.py
+│   ├── login.html.py
+│   └── about.html.py
+├── main.py
+└── boot.py
+```
+You can publish the hole folder with the next commant inside the main file,
+
+```python
+app.static("static")
+```
+
+P.S: Even files inside subdirectories will be published.
+
+### Static Paths
+
+In order to access the published files first of all we need to use the folder path as a prefix. If we use the previous example we will have the next,
+```
+http://xxx.xxx.xxx.xxxx:pppp/static/index.html
+http://xxx.xxx.xxx.xxxx:pppp/static/login.html
+http://xxx.xxx.xxx.xxxx:pppp/static/about.html
+http://xxx.xxx.xxx.xxxx:pppp/static/style/style.css
+http://xxx.xxx.xxx.xxxx:pppp/static/js/index.js
+```
+
+The `x` indicates the IP address and the `p` indicates the port of the applicaiton.
+
 ## 📃 Documentation.py
 
 For a better understanding of the auto-documentation in the userver package you can see the [documentation.py](https://github.com/alexandros44/UServer/blob/main/examples/documentation.py) file. Lets see how everything works.
@@ -351,10 +405,10 @@ def create_(req, res):
     pass
 ```
 
-Simply add two extra parameters on the decorator function. (description, status_code)
+Simply add two extra parameters on the decorator function. (description,  return_codes)
 
 1. The **description** must be a string type parameter.
-2. The **status_code**, must be an object type parameter.
+2. The **return_codes**, must be an object type parameter.
 
 #### Method 2
 
@@ -376,7 +430,7 @@ def delete_person(req, res):
     res.send_json({ 'id': url_id })
 ```
 
-As you can see you have to add a `docs` parameter to the methods decorator. First you need to add the description and afterwards the return_codes. The description can be a string on multiple lines. The status_code on the other hand must be in `json` format. It must consist of `"` and `,` after every entry. You can take a better look [here](https://en.wikipedia.org/wiki/JSON).
+As you can see you have to add a `docs` parameter to the methods decorator. First you need to add the description and afterwards the return_codes. The description can be a string on multiple lines. The return_codes on the other hand must be in `json` format. It must consist of `"` and `,` after every entry. You can take a better look [here](https://en.wikipedia.org/wiki/JSON).
 
 #### Method Conflict
 

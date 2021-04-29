@@ -10,7 +10,7 @@ app = UServer(port=3000, host='0.0.0.0')
 
 @app.router.post('/person', middlewares=[EnableCors],
     description="You can create a new person by creating a json file with the `username`, `fnmae`, `password` and the `email`",
-    status_codes={
+    return_codes={
         '200': 'person created',
         '404': 'json does not contain all the necessary fields',
         '409': 'person exist need to change email or password'
@@ -32,7 +32,7 @@ def create_person(req, res):
         description: You can delete a person by providing only
         his id.
 
-        status_codes: {
+        return_codes: {
             "200": "person deleted",
             "400": "not authorized",
             "404": "person not found"
