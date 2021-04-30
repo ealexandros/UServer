@@ -48,9 +48,10 @@ class Response:
         else:
             http_builder += "\r\n"
 
-        byte_data = bytes(http_builder, 'utf-8')
-        self.__client.send(byte_data)
-        self.close()
+        if(self.client_connection()):
+            byte_data = bytes(http_builder, 'utf-8')
+            self.__client.send(byte_data)
+            self.close()
 
     def __template_processing(self, template, path, params):
         if(path):
@@ -97,8 +98,15 @@ class Response:
     def close(self):
         self.__client.close()
 
+    def client_connection(self):
+        return self.__client.fileno() != -1
+
     def cors(self, value):
         self.__cors = value
+
+    @property
+    def cors_state(self):
+        return self.__cors
 
     @property
     def status(self):

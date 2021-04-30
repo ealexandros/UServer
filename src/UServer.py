@@ -130,11 +130,12 @@ class UServer:
 
     def __run_callbacks(self, __request, __response, callbacks):
         for callback in callbacks:
-            __next = callback(__request, __response)
-            if(type(__next) == Exception):
-                self.__error_respond.call(__request, __response, str(__next))
-            elif(__next != True):
-                return
+            if(__response.client_connection()):
+                __next = callback(__request, __response)
+                if(type(__next) == Exception):
+                    self.__error_respond.call(__request, __response, str(__next))
+                elif(__next != True):
+                    return
 
     def __router(self, __request, __response):
         url_params = {}

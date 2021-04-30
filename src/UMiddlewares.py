@@ -10,7 +10,7 @@ def BodyJson(req, res):
     return Exception('Invalid body content. BodyParser error.')
 
 def ParamValidation(req, res):
-    if(req.params("__raw__") == None):
+    if(req.param("__raw__") == None):
         return True
     return Exception('Invalid url params. ParamValidation error.')
 
