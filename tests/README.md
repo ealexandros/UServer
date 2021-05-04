@@ -32,26 +32,27 @@ Because of the fact that we are running the tests on our local computer you need
 
 ##### Windows
 ```
-..\tests> move LocalTestFiles\UServerTests.py ..\src\UServer.py
+..\tests> move Replacables\UServerTests.py ..\src\UServer.py
 ```
 
 ##### Linux
 ```
-..\tests> mv LocalTestFiles/UServerTests.py ../src/UServer.py
+..\tests> mv Replacables/UServerTests.py ../src/UServer.py
 ```
 
 This will override the hole file. Make sure you have a copy of `UServer`.
 
 ## ✅ Already Tested
 
-| Files                     | Description                                                                |
-| ------------------------- |----------------------------------------------------------------------------|
-| BasicRequestsTests        | Tested the basic functionality of the application.                         |
-| BodyParamsTests           | Tested the request body and the request parameters of the client.          |
-| MultiPathRequestsTests    | Tested the star **\*** path and some variations with the url parameters.   |
-| RequestVariableTests      | Tested the request class variables.                                        |
-| ResponseBodyTypesTests    | Tested all the different response body types.                              |
-| AutoDocumentationTests    | Tested all the different auto documentation types.                         |
+| Files                     | Description                                                                       |
+| ------------------------- |-----------------------------------------------------------------------------------|
+| BasicRequestsTests        | Tested the basic functionality of the application.                                |
+| BodyParamsTests           | Tested the request body and the request parameters of the client.                 |
+| MultiPathRequestsTests    | Tested the star **\*** path and some variations with the url parameters.          |
+| RequestVariableTests      | Tested the request class variables.                                               |
+| ResponseBodyTypesTests    | Tested all the different response body types.                                     |
+| AutoDocumentationTests    | Tested all the different auto documentation types.                                |
+| OptionalFeaturesTests     | Tested all optional features. For example middlewares, dotenv, static files etc.  |
 
 ## ✨ Conclusion
 

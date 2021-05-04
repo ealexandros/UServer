@@ -336,7 +336,7 @@ The package comes with a function called `static`. This function publishes all y
 app.static("folder_path")
 ```
 
-The `folder_path` must be the absolute path to the folder.
+The `folder_path` must be the relative path to the folder.
 
 ### Static Example
 

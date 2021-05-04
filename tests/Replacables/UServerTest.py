@@ -1,4 +1,5 @@
 # import network
+import os
 
 from request.Request import Request
 from request.RequestMethods import RequestMethods
@@ -101,19 +102,21 @@ class UServer:
             raise Exception('Wifi is not setup correctly.')
 
     def static(self, dir_name):
-        base_path = '/' + dir_name.split(upath.get_correct_slash())[-1]
+        base_path = dir_name.replace(upath.get_correct_slash(), '/')
         if('.' in base_path):
             raise Exception('Invalid folder name: ' + base_path)
-
+        if(base_path[0] != '/'): base_path = '/' + base_path
+        if(base_path[-1] == '/'): base_path = base_path[:-1]
+            
         try:
-            for path, dirs, files in upath.walk(dir_name):
-                path_validation = '.' + re.findall(r'[\\/]([A-Za-z0-9_-]|[\\/]|[.])*', path)[0]
-                if(path_validation != path):
-                    raise Exception('Invalid path name.')
-                elif(any(list(filter(lambda x: '.' in x, dirs)))):
-                    raise Exception('Invalid folder name. Folders must not contain . characters')
+            for path, dirs, files in upath.walk(os.getcwd() + dir_name):
+            #     path_validation = '.' + re.findall(r'[\\/]([A-Za-z0-9_-]|[\\/]|[.])*', path)[0]
+            #     if(path_validation != path):
+            #         raise Exception('Invalid path name.')
+            #     elif(any(list(filter(lambda x: '.' in x, dirs)))):
+            #         raise Exception('Invalid folder name. Folders must not contain . characters')
 
-                middle_path = path.replace(dir_name, '/').replace(upath.get_correct_slash(), '/')[1:] + '/'
+                middle_path = path.replace(os.getcwd(), '/').replace(dir_name, '').replace(upath.get_correct_slash(), '/')[1:] + '/'
                 for f in files:
                     with open(path + upath.get_correct_slash() + f, 'r') as fil:
                         self.router.static_content(base_path + middle_path + f, "".join(fil.readlines()))
