@@ -1,6 +1,6 @@
 # UServer Testing ![micropython](https://img.shields.io/badge/micropython-blue)
 
-*The test will continue to grow as the application gets larger.*
+*The tests will continue to grow as the application gets larger.*
 
 ## 📚 Table of Content
 
@@ -13,9 +13,9 @@
 
 ## 🎯 Description
 
-In this subfolder are all the different type of tests that have been used to make sure the package runs smoothly. The tests are made with the help of `unittest2`. They are runned on a local computer, not on a microcontroller like `esp32|8266`.
+In this subfolder, there are all the different type of tests that have been used to make sure the package runs smoothly. The tests are made with the help of `unittest2`. They are runned on a local computer and not on a microcontroller (like `esp32|8266`).
 
-As metioned above the test will continue to grow as the application gets larger.
+As metioned above the testing will continue to grow as the application gets larger.
 
 ## 📦 Setup
 
